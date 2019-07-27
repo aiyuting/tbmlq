@@ -51,7 +51,17 @@ class Index extends Controller
                 $fromUser  =  $postObj->ToUserName;
                 $time 	   =  time();
                 $msgType   =  'text';
-                $content   =  '你终于来啦,等你等的好辛苦啊!可尝试输入关键字:教程,Tel,wechat,1等000';
+                $content   =  '「你购物 我奖励」我是您的省钱小管家，么么哒~!
+                
+[勾引]请发送商品链接发送到公众号，我们会第一时间为您找到优惠信息~
+
+[拥抱]使用教程：<a href=\'http://www.baidu.com\'>点击查看>></a>
+
+[鼓掌]商品搜索可发送：搜/买/找+关键词(例如：买衣服)
+
+[红包]新用户完成首次购物后可领取一份惊喜哦~
+
+[疑问]更多命令请发送“帮助”查看！';
                 $template  =  "<xml>
 					<ToUserName><![CDATA[%s]]></ToUserName>
 					<FromUserName><![CDATA[%s]]></FromUserName>
