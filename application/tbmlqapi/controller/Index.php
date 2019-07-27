@@ -39,7 +39,7 @@ class Index extends Controller
     public function reposeMsg()
     {
         //1.接受数据
-        $postArr = $GLOBALS['HTTP_RAW_POST_DATA'];	//接受xml数据
+        $postArr = file_get_contents("php://input");	//接受xml数据
         //2.处理消息类型,推送消息
         $postObj = simplexml_load_string( $postArr );	//将xml数据转化为对象
         if( strtolower( $postObj->MsgType ) == 'event')
@@ -114,7 +114,7 @@ class Index extends Controller
                 case 1:
                     $content = '你输入了个数字1';
                     break;
-                case Tel:
+                case '电话':
                     $content = '12345678901';
                     break;
                 case '教程':
