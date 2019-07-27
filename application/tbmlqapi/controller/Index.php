@@ -3,7 +3,7 @@ namespace app\tbmlqapi\controller;
 
 use think\Controller;
 
-class index extends Controller
+class Index extends Controller
 {
 
     private $wechatToken = 'wenhao';
