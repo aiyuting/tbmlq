@@ -36,6 +36,7 @@ class ZheTaoKe extends Controller
      */
     public function getShopId($Oldurl)
     {
+        $Oldurl = urlencode($Oldurl);
         $url = $this->apiUrl."open_shangpin_id.ashx?appkey={$this->appkey}&sid={$this->sid}&content={$Oldurl}&type=0";
         $result = json_decode(Curl::send($url,'','get'),true);
         return $result;
