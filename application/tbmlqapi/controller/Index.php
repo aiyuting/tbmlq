@@ -133,7 +133,7 @@ class Index extends Controller
                     }
 
                     //调用转换淘口令链接.
-                    $tkl = $zhetaoke->getTkl($url,$itemInfo['pict_url'])['model'];
+                    $tkl = $zhetaoke->getTkl($url,$itemInfo['results']['n_tbk_item'][0]['pict_url'])['model'];
                     $content = $tkl;
                 }else{
                     $content = Config::get('message.otherMessage');

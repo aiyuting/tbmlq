@@ -26,6 +26,8 @@ class ZheTaoKe extends Controller
     {
         $url = $this->apiUrl."open_gaoyongzhuanlian.ashx?appkey={$this->appkey}&sid={$this->sid}&pid={$this->pid}&num_iid={$shopId}&signurl=1";
         $result = json_decode(Curl::send($url,'','get'),true);
+        $result = json_decode(Curl::send($result['url'],'','get'),true);
+
         return $result;
     }
 
