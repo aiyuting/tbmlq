@@ -140,12 +140,14 @@ class Index extends Controller
                     $quanhoujia = $itemInfo['quanhou_jiage'];//券后价格
                     $shangpingName = $itemInfo['title'];//商品名字
                     //此处所有佣金. (高级用户,后期需要配合设置的百分比进行.)
-                    $yongjin = $quanhoujia * $itemInfo['tkrate3'] * 0.9;//商品的全部佣金.
+                    $yongjin = $quanhoujia * $itemInfo['tkrate3'] * 0.9 / 100;//商品的全部佣金.
                     $kapianArr = [
-                        'title'=>$shangpingName,
-                        'description'=>"原价：$yuanjia\r\n券后价格：$quanhoujia\r\n 佣金：$yongjin",
-                        'picUrl'=>$logo,
-                        'url'=>'http://www.mengqy.cn',
+                        [
+                            'title'=>$shangpingName,
+                            'description'=>"原价：$yuanjia\r\n券后价格：$quanhoujia\r\n佣金：$yongjin",
+                            'picUrl'=>$logo,
+                            'url'=>'http://www.mengqy.cn',
+                        ]
                     ];
                     //卡片.
                     $toUser = $this->postObj->FromUserName;
@@ -168,7 +170,6 @@ class Index extends Controller
                     $template .="</Articles>
 			     </xml> ";
                     echo sprintf($template, $toUser, $fromUser, time(), 'news');
-                    //注意：进行多图文发送时，子图文个数不能超过10个
                 }else{
                     $content = Config::get('message.otherMessage');
                 }
