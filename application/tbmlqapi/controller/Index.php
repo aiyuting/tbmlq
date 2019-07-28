@@ -1,7 +1,6 @@
 <?php
 namespace app\tbmlqapi\controller;
 
-use app\tbmlqapi\tool\AddWxMenu;
 use app\tbmlqapi\tool\ArrayToXml;
 use think\Controller;
 
@@ -9,6 +8,7 @@ class Index extends Controller
 {
 
     private $wechatToken = 'wenhao';
+    private $postObj;
     public function index()
     {
         return 'this is for Wechat';
@@ -44,223 +44,96 @@ class Index extends Controller
         $postArr = file_get_contents("php://input");	//接受xml数据
         //2.处理消息类型,推送消息
         $postObj = simplexml_load_string( $postArr );	//将xml数据转化为对象
-        if( strtolower( $postObj->MsgType ) == 'event')
+        $this->postObj = $postObj;
+        //获取msgType
+        $msgType = strtolower( $postObj->MsgType );
+        switch ($msgType)
         {
-            //关注公众号事件
-            if( strtolower( $postObj->Event ) == 'subscribe' )
-            {
-                $toUser    =  $postObj->FromUserName;
-                $fromUser  =  $postObj->ToUserName;
-                $time 	   =  time();
-                $msgType   =  'text';
-                $content   =  "「你购物 我奖励」我是您的省钱小管家，么么哒~!
-                                                
-                                [勾引]请发送商品链接发送到公众号，我们会第一时间为您找到优惠信息~
-                                
-                                [拥抱]使用教程：<a href='http://www.baidu.com'>点击查看>></a>
-                                
-                                [鼓掌]商品搜索可发送：搜/买/找+关键词(例如：买衣服)
-                                
-                                [红包]新用户完成首次购物后可领取一份惊喜哦~
-                                
-                                [疑问]更多命令请发送“帮助”查看！";
-                $tmplateArr = [
-                    'ToUserName' =>  $toUser,
-                    'FromUserName' =>  $fromUser,
-                    'CreateTime' =>  $time,
-                    'MsgType' =>  $msgType,
-                    'Content' =>  $content,
-                ];
-                $template  =  ArrayToXml::arrayToXml($tmplateArr);
-                echo $template;
-            }
-        }
-
-        //回复文本信息
-        if( strtolower( $postObj->MsgType ) == 'text' && trim($postObj->Content)=='wechat')
-        {
-            $toUser = $postObj->FromUserName;
-            $fromUser = $postObj->ToUserName;
-            $arr = array(
-                array(
-                    'title'=>'test',
-                    'description'=>"just so so...",
-                    'picUrl'=>'http://www.acting-man.com/blog/media/2014/11/secret-.jpg',
-                    'url'=>'http://www.imooc.com',
-                ),
-                array(
-                    'title'=>'hao123',
-                    'description'=>"hao123 is very cool",
-                    'picUrl'=>'https://www.baidu.com/img/bdlogo.png',
-                    'url'=>'http://www.hao123.com',
-                ),
-                array(
-                    'title'=>'qq',
-                    'description'=>"qq is very cool",
-                    'picUrl'=>'http://www.imooc.com/static/img/common/logo.png',
-                    'url'=>'http://www.qq.com',
-                ),
-            );
-            $template = "<xml>
-			     <ToUserName><![CDATA[%s]]></ToUserName>
-			     <FromUserName><![CDATA[%s]]></FromUserName>
-			     <CreateTime>%s</CreateTime>
-			     <MsgType><![CDATA[%s]]></MsgType>
-			     <ArticleCount>".count($arr)."</ArticleCount>
-			     <Articles>";
-            foreach($arr as $k=>$v){
-                $template .="<item>
-				    <Title><![CDATA[".$v['title']."]]></Title> 
-				    <Description><![CDATA[".$v['description']."]]></Description>
-				    <PicUrl><![CDATA[".$v['picUrl']."]]></PicUrl>
-				    <Url><![CDATA[".$v['url']."]]></Url>
-				    </item>";
-            }
-
-            $template .="</Articles>
-			     </xml> ";
-            echo sprintf($template, $toUser, $fromUser, time(), 'news');
-            //注意：进行多图文发送时，子图文个数不能超过10个
-        }else{
-            switch( trim( $postObj->Content ) )
-            {
-                case 1:
-                    $content = '你输入了个数字1';
-                    break;
-                case '电话':
-                    $content = '12345678901';
-                    break;
-                case '教程':
-                    $content = "<a href='www.imooc.com'>慕课网</a>";
-                    break;
-                case '博客':
-                    $content = "<a href='blog.abc.com'>测试微信</a>";
-                    break;
-                default:
-                    $content = "[微笑]您好，我是可以为您购物省钱的小管家
-                                - - - - - - - - - -
-                                [握手]发送商品链接，可为您查询优惠和奖励
-                                - - - - - - - - - -
-                                [鼓掌]商品搜索可发送：搜/买/找+关键词(例如：买衣服)
-                                - - - - - - - - - -
-                                <a href='http://www.baidu.com'>▶点击查看使用教程>></a>
-                                - - - - - - - - - -
-                                [疑问]更多命令请发送“帮助”查看";
-                    break;
-            }
-            $toUser 	=  $postObj->FromUserName;
-            $fromUser 	=  $postObj->ToUserName;
-            $time 		=  time();
-            $msgType 	=  'text';
-            $tmplateArr = [
-                'ToUserName' =>  $toUser,
-                'FromUserName' =>  $fromUser,
-                'CreateTime' =>  $time,
-                'MsgType' =>  $msgType,
-                'Content' =>  $content,
-            ];
-            $template   =  ArrayToXml::arrayToXml($tmplateArr);
-            echo $template;
+            case $msgType == 'event':
+                //关注公众号事件
+                if( strtolower( $postObj->Event ) == 'subscribe' )
+                {
+                    $this->guanzhuGzh();
+                }
+                break;
+            //回复文本消息
+            case $msgType == 'text';
+                $this->outMessage(trim( $postObj->Content ));
+                break;
         }
     }
-
 
     /**
-     * 创建菜单
+     * 回复消息
+     */
+    public function outMessage($text)
+    {
+        switch( $text )
+        {
+            case 1:
+                $content = '你输入了个数字1';
+                break;
+            case '电话':
+                $content = '12345678901';
+                break;
+            case '教程':
+                $content = "<a href='www.imooc.com'>慕课网</a>";
+                break;
+            case '博客':
+                $content = "<a href='blog.abc.com'>测试微信</a>";
+                break;
+            default:
+                $content = "[微笑]您好，我是可以为您购物省钱的小管家\r\n
+- - - - - - - - - -\r\n
+[握手]发送商品链接，可为您查询优惠和奖励\r\n
+- - - - - - - - - -\r\n
+[鼓掌]商品搜索可发送：搜/买/找+关键词(例如：买衣服)\r\n
+- - - - - - - - - -\r\n
+<a href='http://www.baidu.com'>▶点击查看使用教程>></a>\r\n
+- - - - - - - - - -\r\n
+[疑问]更多命令请发送“帮助”查看";
+                break;
+        }
+        $toUser 	=  $this->postObj->FromUserName;
+        $fromUser 	=  $this->postObj->ToUserName;
+        $time 		=  time();
+        $msgType 	=  'text';
+        $tmplateArr = [
+            'ToUserName' =>  $toUser,
+            'FromUserName' =>  $fromUser,
+            'CreateTime' =>  $time,
+            'MsgType' =>  $msgType,
+            'Content' =>  $content,
+        ];
+        $template   =  ArrayToXml::arrayToXml($tmplateArr);
+        echo $template;
+    }
+
+    /**
+     * 关注公众号的事件
      */
 
-    public function createMenu()
+    public function guanzhuGzh()
     {
-        $postArr = [
-            'button' => [
-                [
-                    'name' => '帮助中心',
-                    'sub_button' => [
-                        [
-                            "type"=>"click",
-                            "name"=>"领券商城",
-                            "key"=>"lqshop"
-                        ],
-                        [
-                            "type"=>"view",
-                            "name"=>"人工客服",
-                            "url"=>"http://www.mengqy.cn"
-                        ],
-                        [
-                            "type"=>"click",
-                            "name"=>"帮助指令",
-                            "key"=>"helpCommond"
-                        ],
-                        [
-                            "type"=>"view",
-                            "name"=>"使用教程",
-                            "url"=>"http://www.mengqy.cn"
-                        ],
-                        [
-                            "type"=>"view",
-                            "name"=>"提现演示",
-                            "url"=>"http://www.mengqy.cn"
-                        ],
-                    ],
-                ],
-                [
-                    'name' => '福利中心',
-                    'sub_button' => [
-                        [
-                            "type"=>"click",
-                            "name"=>"会员影视",
-                            "key"=>"movie"
-                        ],
-                        [
-                            "type"=>"click",
-                            "name"=>"会员等级",
-                            "key"=>"vipLevel"
-                        ],
-                        [
-                            "type"=>"click",
-                            "name"=>"新人奖励",
-                            "key"=>"newAward"
-                        ],
-                        [
-                            "type"=>"click",
-                            "name"=>"每日签到",
-                            "key"=>"sign"
-                        ],
-                    ],
-                ],
-                [
-                    'name' => '个人中心',
-                    'sub_button' => [
-                        [
-                            "type"=>"click",
-                            "name"=>"申请提现",
-                            "key"=>"sqtx"
-                        ],
-                        [
-                            "type"=>"click",
-                            "name"=>"收支明细",
-                            "key"=>"szmx"
-                        ],
-                        [
-                            "type"=>"click",
-                            "name"=>"我的推广",
-                            "key"=>"wdtg"
-                        ],
-                        [
-                            "type"=>"click",
-                            "name"=>"我的订单",
-                            "key"=>"wddd"
-                        ],
-                        [
-                            "type"=>"click",
-                            "name"=>"我的账户",
-                            "key"=>"wdzh"
-                        ],
-                    ],
-                ],
-            ]
+        $toUser    =  $this->postObj->FromUserName;
+        $fromUser  =  $this->postObj->ToUserName;
+        $time 	   =  time();
+        $msgType   =  'text';
+        $content   =  "「你购物 我奖励」我是您的省钱小管家，么么哒~!\r\n
+[勾引]请发送商品链接发送到公众号，我们会第一时间为您找到优惠信息~\r\n
+[拥抱]使用教程：<a href='http://www.baidu.com'>点击查看>></a>\r\n
+[鼓掌]商品搜索可发送：搜/买/找+关键词(例如：买衣服)\r\n
+[红包]新用户完成首次购物后可领取一份惊喜哦~\r\n
+[疑问]更多命令请发送“帮助”查看！";
+        $tmplateArr = [
+            'ToUserName' =>  $toUser,
+            'FromUserName' =>  $fromUser,
+            'CreateTime' =>  $time,
+            'MsgType' =>  $msgType,
+            'Content' =>  $content,
         ];
-        $result = AddWxMenu::defindItem($postArr);
-        dump($result);die;
+        $template  =  ArrayToXml::arrayToXml($tmplateArr);
+        echo $template;
     }
+
 }
