@@ -141,30 +141,35 @@ class Index extends Controller
                     $quanhoujia = $itemInfo['quanhou_jiage'];//券后价格
                     $shangpingName = $itemInfo['title'];//商品名字
                     //此处所有佣金. (高级用户,后期需要配合设置的百分比进行.)
-                    $yongjin = $itemInfo['tkrate3'] * 0.9;//商品的全部佣金.
+                    $yongjin = $quanhoujia * $itemInfo['tkrate3'] * 0.9;//商品的全部佣金.
                     $kapianArr = [
                         'title'=>$shangpingName,
-                        'description'=>"原价：$yuanjia 券后价格：$quanhoujia 佣金：$yongjin",
+                        'description'=>"原价：$yuanjia\r\n券后价格：$quanhoujia\r\n 佣金：$yongjin",
                         'picUrl'=>$logo,
                         'url'=>'http://www.mengqy.cn',
                     ];
                     //卡片.
+                    $toUser = $this->postObj->FromUserName;
+                    $fromUser = $this->postObj->ToUserName;
                     $template = "<xml>
-                     <ToUserName><![CDATA[$this->postObj->FromUserName]]></ToUserName>
-                     <FromUserName><![CDATA[$this->postObj->ToUserName]]></FromUserName>
-                     <CreateTime>time()</CreateTime>
-                     <MsgType><![CDATA[news]]></MsgType>
-                     <ArticleCount>count($kapianArr)</ArticleCount>
-                     <Articles>
-                        <item>
-                        <Title><![CDATA[{$kapianArr['title']}]]></Title>
-                        <Description><![CDATA[{$kapianArr['description']}]]></Description>
-                        <PicUrl><![CDATA[{$kapianArr['picUrl']}]]></PicUrl>
-                        <Url><![CDATA[{$kapianArr['url']}]></Url>
-                        </item>
-                    </Articles>
-                        </xml>";
-                    $content = $template;
+			     <ToUserName><![CDATA[%s]]></ToUserName>
+			     <FromUserName><![CDATA[%s]]></FromUserName>
+			     <CreateTime>%s</CreateTime>
+			     <MsgType><![CDATA[%s]]></MsgType>
+			     <ArticleCount>".count($kapianArr)."</ArticleCount>
+			     <Articles>";
+                    foreach($kapianArr as $k=>$v){
+                        $template .="<item>
+				    <Title><![CDATA[".$v['title']."]]></Title> 
+				    <Description><![CDATA[".$v['description']."]]></Description>
+				    <PicUrl><![CDATA[".$v['picUrl']."]]></PicUrl>
+				    <Url><![CDATA[".$v['url']."]]></Url>
+				    </item>";
+                    }
+                    $template .="</Articles>
+			     </xml> ";
+                    echo sprintf($template, $toUser, $fromUser, time(), 'news');
+                    //注意：进行多图文发送时，子图文个数不能超过10个
                 }else{
                     $content = Config::get('message.otherMessage');
                 }
