@@ -59,8 +59,8 @@ class ZheTaoKe extends Controller
 
     public function getItemInfo($shopId)
     {
-        $url = $this->apiUrl."open_item_info.ashx?appkey={$this->appkey}&sid={$this->sid}&num_iids={$shopId}";
+        $url = $this->apiUrl."api_detail.ashx?appkey={$this->appkey}&tao_id={$shopId}";
         $result = json_decode(Curl::send($url,'','get'),true);
-        return $result['tbk_item_info_get_response']['results']['n_tbk_item'][0];
+        return $result['content'];
     }
 }
