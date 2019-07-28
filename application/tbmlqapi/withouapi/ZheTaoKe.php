@@ -61,6 +61,6 @@ class ZheTaoKe extends Controller
     {
         $url = $this->apiUrl."api_detail.ashx?appkey={$this->appkey}&tao_id={$shopId}";
         $result = json_decode(Curl::send($url,'','get'),true);
-        return $result['content'];
+        return $result['content'][0];
     }
 }
