@@ -140,7 +140,7 @@ class Index extends Controller
                     $quanhoujia = $itemInfo['quanhou_jiage'];//券后价格
                     $shangpingName = $itemInfo['title'];//商品名字
                     //此处所有佣金. (高级用户,后期需要配合设置的百分比进行.)
-                    $yongjin = $quanhoujia * $itemInfo['tkrate3'] * 0.9 / 100;//商品的全部佣金.
+                    $yongjin = rand($quanhoujia * $itemInfo['tkrate3'] * 0.9 / 100,2);//商品的全部佣金.(保留两位)
                     $kapianArr = [
                         [
                             'title'=>$shangpingName,
