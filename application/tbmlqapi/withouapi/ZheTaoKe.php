@@ -28,7 +28,7 @@ class ZheTaoKe extends Controller
         $result = json_decode(Curl::send($url,'','get'),true);
         $result = json_decode(Curl::send($result['url'],'','get'),true);
 
-        return $result['tbk_privilege_get_response']['result']['data'];
+        return $result['tbk_privilege_get_response']['result']['data'] ?? '';
     }
 
     /**
@@ -39,7 +39,7 @@ class ZheTaoKe extends Controller
         $Oldurl = urlencode($Oldurl);
         $url = $this->apiUrl."open_shangpin_id.ashx?appkey={$this->appkey}&sid={$this->sid}&content={$Oldurl}&type=0";
         $result = json_decode(Curl::send($url,'','get'),true);
-        return $result;
+        return $result ?? '';
     }
 
     /**
@@ -51,7 +51,7 @@ class ZheTaoKe extends Controller
         $url = $this->apiUrl."open_tkl_create.ashx?appkey={$this->appkey}&sid={$this->sid}&text={$text}&url={$Oldurl}&logo={$logo}&signurl=1";
         $result = json_decode(Curl::send($url,'','get'),true);
         $result = json_decode(Curl::send($result['url'],'','get'),true);
-        return $result['tbk_tpwd_create_response']['data'];
+        return $result['tbk_tpwd_create_response']['data'] ?? '';
     }
 
     /**
@@ -62,6 +62,6 @@ class ZheTaoKe extends Controller
     {
         $url = $this->apiUrl."api_detail.ashx?appkey={$this->appkey}&tao_id={$shopId}";
         $result = json_decode(Curl::send($url,'','get'),true);
-        return $result['content'][0];
+        return $result['content'][0] ?? '';
     }
 }

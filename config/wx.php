@@ -1,5 +1,5 @@
 <?php
 return [
-    'appId' => 'wx723e5e717271b2b6',
-    'appSecret' => '02b4fd18408b5e633d7798b016da94cc',
+    'appId' => 'wx1419f3ec5e774e32',
+    'appSecret' => 'dbd57911085aecc6ae5f3f9fcdc35583',
 ];

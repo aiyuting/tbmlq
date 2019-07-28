@@ -119,18 +119,21 @@ class Index extends Controller
                 //调用查询商品id接口
                 $shopId = $zhetaoke->getShopId($text)['item_id'] ?? '';
                 if(!empty($shopId)){
-                    //获取商品详情api
-                    $itemInfo = $zhetaoke->getItemInfo($shopId);
+
                     //调取转链api
                     $gaoyongInfo = $zhetaoke->gaoyongApiShopId($shopId);
-
+                    if(empty($gaoyongInfo)){
+                        ReposeText::reposeText($this->postObj,'此物品没优惠券');
+                        exit;
+                    }
                     //如果有优惠券,那么就走二合一链接
                     if(!empty($gaoyongInfo['coupon_remain_count'])){
                         $url = $gaoyongInfo['coupon_click_url'];
                     }else{
                         $url = $gaoyongInfo['item_url'];
                     }
-
+                    //获取商品详情api
+                    $itemInfo = $zhetaoke->getItemInfo($shopId);
                     //调用转换淘口令链接.
                     $tkl = $zhetaoke->getTkl($url,$itemInfo['pict_url'])['model'];
 
