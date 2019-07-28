@@ -119,7 +119,7 @@ class Index extends Controller
                 //调用查询商品id接口
                 $shopId = $zhetaoke->getShopId($text)['item_id'] ?? '';
                 if(!empty($shopId)){
-
+                    ReposeText::reposeText($this->postObj,'正在努力查询中,请稍后...');
                     //获取商品详情api
                     $itemInfo = $zhetaoke->getItemInfo($shopId);
                     //调取转链api
@@ -134,7 +134,37 @@ class Index extends Controller
 
                     //调用转换淘口令链接.
                     $tkl = $zhetaoke->getTkl($url,$itemInfo['pict_url'])['model'];
-                    $content = $tkl;
+
+                    //用到的变量。
+                    $logo = $itemInfo['pict_url'];//商品logo
+                    $yuanjia = $itemInfo['size'];//原价
+                    $quanhoujia = $itemInfo['quanhou_jiage'];//券后价格
+                    $shangpingName = $itemInfo['title'];//商品名字
+                    //此处所有佣金. (高级用户,后期需要配合设置的百分比进行.)
+                    $yongjin = $itemInfo['tkrate3'] * 0.9;//商品的全部佣金.
+                    $kapianArr = [
+                        'title'=>$shangpingName,
+                        'description'=>"原价：$yuanjia 券后价格：$quanhoujia 佣金：$yongjin",
+                        'picUrl'=>$logo,
+                        'url'=>'http://www.mengqy.cn',
+                    ];
+                    //卡片.
+                    $template = "<xml>
+                     <ToUserName><![CDATA[$this->postObj->FromUserName]]></ToUserName>
+                     <FromUserName><![CDATA[$this->postObj->ToUserName]]></FromUserName>
+                     <CreateTime>time()</CreateTime>
+                     <MsgType><![CDATA[news]]></MsgType>
+                     <ArticleCount>count($kapianArr)</ArticleCount>
+                     <Articles>
+                        <item>
+                        <Title><![CDATA[{$kapianArr['title']}]]></Title>
+                        <Description><![CDATA[{$kapianArr['description']}]]></Description>
+                        <PicUrl><![CDATA[{$kapianArr['picUrl']}]]></PicUrl>
+                        <Url><![CDATA[{$kapianArr['url']}]></Url>
+                        </item>
+                    </Articles>
+                        </xml>";
+                    $content = $template;
                 }else{
                     $content = Config::get('message.otherMessage');
                 }
