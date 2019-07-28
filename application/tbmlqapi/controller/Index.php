@@ -1,6 +1,8 @@
 <?php
 namespace app\tbmlqapi\controller;
 
+use app\tbmlqapi\tool\AddWxMenu;
+use app\tbmlqapi\tool\ArrayToXml;
 use think\Controller;
 
 class Index extends Controller
@@ -51,25 +53,26 @@ class Index extends Controller
                 $fromUser  =  $postObj->ToUserName;
                 $time 	   =  time();
                 $msgType   =  'text';
-                $content   =  '「你购物 我奖励」我是您的省钱小管家，么么哒~!
-                
-[勾引]请发送商品链接发送到公众号，我们会第一时间为您找到优惠信息~
-
-[拥抱]使用教程：<a href=\'http://www.baidu.com\'>点击查看>></a>
-
-[鼓掌]商品搜索可发送：搜/买/找+关键词(例如：买衣服)
-
-[红包]新用户完成首次购物后可领取一份惊喜哦~
-
-[疑问]更多命令请发送“帮助”查看！';
-                $template  =  "<xml>
-					<ToUserName><![CDATA[%s]]></ToUserName>
-					<FromUserName><![CDATA[%s]]></FromUserName>
-					<CreateTime>%s</CreateTime>
-					<MsgType><![CDATA[%s]]></MsgType>
-					<Content><![CDATA[%s]]></Content>
-					</xml>";
-                echo sprintf($template, $toUser, $fromUser, $time, $msgType, $content);
+                $content   =  "「你购物 我奖励」我是您的省钱小管家，么么哒~!
+                                                
+                                [勾引]请发送商品链接发送到公众号，我们会第一时间为您找到优惠信息~
+                                
+                                [拥抱]使用教程：<a href='http://www.baidu.com'>点击查看>></a>
+                                
+                                [鼓掌]商品搜索可发送：搜/买/找+关键词(例如：买衣服)
+                                
+                                [红包]新用户完成首次购物后可领取一份惊喜哦~
+                                
+                                [疑问]更多命令请发送“帮助”查看！";
+                $tmplateArr = [
+                    'ToUserName' =>  $toUser,
+                    'FromUserName' =>  $fromUser,
+                    'CreateTime' =>  $time,
+                    'MsgType' =>  $msgType,
+                    'Content' =>  $content,
+                ];
+                $template  =  ArrayToXml::arrayToXml($tmplateArr);
+                echo $template;
             }
         }
 
@@ -134,21 +137,130 @@ class Index extends Controller
                     $content = "<a href='blog.abc.com'>测试微信</a>";
                     break;
                 default:
-                    $content = '升级打造中...';
+                    $content = "[微笑]您好，我是可以为您购物省钱的小管家
+                                - - - - - - - - - -
+                                [握手]发送商品链接，可为您查询优惠和奖励
+                                - - - - - - - - - -
+                                [鼓掌]商品搜索可发送：搜/买/找+关键词(例如：买衣服)
+                                - - - - - - - - - -
+                                <a href='http://www.baidu.com'>▶点击查看使用教程>></a>
+                                - - - - - - - - - -
+                                [疑问]更多命令请发送“帮助”查看";
                     break;
             }
             $toUser 	=  $postObj->FromUserName;
             $fromUser 	=  $postObj->ToUserName;
             $time 		=  time();
             $msgType 	=  'text';
-            $template   =  "<xml>
-				        <ToUserName><![CDATA[%s]]></ToUserName>
-				        <FromUserName><![CDATA[%s]]></FromUserName>
-				        <CreateTime>%s</CreateTime>
-			         	<MsgType><![CDATA[%s]]></MsgType>
-			                <Content><![CDATA[%s]]></Content>
-				        </xml>";
-            echo sprintf($template, $toUser, $fromUser, $time, $msgType, $content);
+            $tmplateArr = [
+                'ToUserName' =>  $toUser,
+                'FromUserName' =>  $fromUser,
+                'CreateTime' =>  $time,
+                'MsgType' =>  $msgType,
+                'Content' =>  $content,
+            ];
+            $template   =  ArrayToXml::arrayToXml($tmplateArr);
+            echo $template;
         }
+    }
+
+
+    /**
+     * 创建菜单
+     */
+
+    public function createMenu()
+    {
+        $postArr = [
+            'button' => [
+                [
+                    'name' => '帮助中心',
+                    'sub_button' => [
+                        [
+                            "type"=>"click",
+                            "name"=>"领券商城",
+                            "key"=>"lqshop"
+                        ],
+                        [
+                            "type"=>"view",
+                            "name"=>"人工客服",
+                            "url"=>"http://www.mengqy.cn"
+                        ],
+                        [
+                            "type"=>"click",
+                            "name"=>"帮助指令",
+                            "key"=>"helpCommond"
+                        ],
+                        [
+                            "type"=>"view",
+                            "name"=>"使用教程",
+                            "url"=>"http://www.mengqy.cn"
+                        ],
+                        [
+                            "type"=>"view",
+                            "name"=>"提现演示",
+                            "url"=>"http://www.mengqy.cn"
+                        ],
+                    ],
+                ],
+                [
+                    'name' => '福利中心',
+                    'sub_button' => [
+                        [
+                            "type"=>"click",
+                            "name"=>"会员影视",
+                            "key"=>"movie"
+                        ],
+                        [
+                            "type"=>"click",
+                            "name"=>"会员等级",
+                            "key"=>"vipLevel"
+                        ],
+                        [
+                            "type"=>"click",
+                            "name"=>"新人奖励",
+                            "key"=>"newAward"
+                        ],
+                        [
+                            "type"=>"click",
+                            "name"=>"每日签到",
+                            "key"=>"sign"
+                        ],
+                    ],
+                ],
+                [
+                    'name' => '个人中心',
+                    'sub_button' => [
+                        [
+                            "type"=>"click",
+                            "name"=>"申请提现",
+                            "key"=>"sqtx"
+                        ],
+                        [
+                            "type"=>"click",
+                            "name"=>"收支明细",
+                            "key"=>"szmx"
+                        ],
+                        [
+                            "type"=>"click",
+                            "name"=>"我的推广",
+                            "key"=>"wdtg"
+                        ],
+                        [
+                            "type"=>"click",
+                            "name"=>"我的订单",
+                            "key"=>"wddd"
+                        ],
+                        [
+                            "type"=>"click",
+                            "name"=>"我的账户",
+                            "key"=>"wdzh"
+                        ],
+                    ],
+                ],
+            ]
+        ];
+        $result = AddWxMenu::defindItem($postArr);
+        dump($result);die;
     }
 }
