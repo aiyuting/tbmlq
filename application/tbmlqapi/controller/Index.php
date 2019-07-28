@@ -2,6 +2,7 @@
 namespace app\tbmlqapi\controller;
 
 use app\tbmlqapi\tool\ArrayToXml;
+use app\tbmlqapi\tool\ReposeText;
 use think\Controller;
 
 class Index extends Controller
@@ -55,6 +56,11 @@ class Index extends Controller
                 {
                     $this->guanzhuGzh();
                 }
+                //单机菜单事件
+                if( strtolower( $postObj->Event ) == 'click' )
+                {
+                    $this->clickMenu(strtolower( $postObj->EventKey ));
+                }
                 break;
             //回复文本消息
             case $msgType == 'text';
@@ -62,6 +68,48 @@ class Index extends Controller
                 break;
         }
     }
+    /**
+     * 单机菜单事件
+     */
+    public function clickMenu($key)
+    {
+        switch ($key)
+        {
+            case 'lqshop':
+                $content = "<a href='http://www.mengqy.cn'>▶点击进入綯寳领券商城>></a>
+- - - - - - - - - -
+★领券商城下单的必须发送订单号手动跟单";
+                break;
+            case 'helpCommand':
+                $content = "- [转圈] 机器人使用简单帮助 [转圈] -\r\n
+[勾引]发送商品给我查询奖励\r\n
+[太阳]常用一般指令：\r\n
+签到-说明:每天签到领取奖励\r\n
+资料-说明:查询您的详细资料\r\n
+余额-说明:查询您的账户余额\r\n
+提现-说明:申请提现如:提现10\r\n
+[月亮]常用修改指令:\r\n
+修改姓名发送：姓名 XX \r\n
+修改微信发送：微信 XX \r\n
+修改支付宝发送：支付宝 XX\r\n
+[疑问]常用查询指令：\r\n
+发送订单：查询最近省钱订单\r\n
+发送徒弟：查询当前徒弟数量\r\n
+发送明细：查询收入支出明细\r\n
+[拥抱]常用搜索指令\r\n
+发送：搜/买/找XX搜索优惠\r\n
+例如：搜女装|买男装|找音箱";
+                break;
+            default:
+                $content = '联系开发者,此处未完成';
+                break;
+        }
+
+        return ReposeText::reposeText($this->postObj,$content);
+    }
+
+
+
 
     /**
      * 回复消息
@@ -89,24 +137,12 @@ class Index extends Controller
 - - - - - - - - - -
 [鼓掌]商品搜索可发送：搜/买/找+关键词(例如：买衣服)
 - - - - - - - - - -
-<a href='http://www.baidu.com'>▶点击查看使用教程>></a>
+<a href='http://www.mengqy.cn'>▶点击查看使用教程>></a>
 - - - - - - - - - -
 [疑问]更多命令请发送“帮助”查看";
                 break;
         }
-        $toUser 	=  $this->postObj->FromUserName;
-        $fromUser 	=  $this->postObj->ToUserName;
-        $time 		=  time();
-        $msgType 	=  'text';
-        $tmplateArr = [
-            'ToUserName' =>  $toUser,
-            'FromUserName' =>  $fromUser,
-            'CreateTime' =>  $time,
-            'MsgType' =>  $msgType,
-            'Content' =>  $content,
-        ];
-        $template   =  ArrayToXml::arrayToXml($tmplateArr);
-        echo $template;
+        return ReposeText::reposeText($this->postObj,$content);
     }
 
     /**
@@ -125,15 +161,7 @@ class Index extends Controller
 [鼓掌]商品搜索可发送：搜/买/找+关键词(例如：买衣服)\r\n
 [红包]新用户完成首次购物后可领取一份惊喜哦~\r\n
 [疑问]更多命令请发送“帮助”查看！";
-        $tmplateArr = [
-            'ToUserName' =>  $toUser,
-            'FromUserName' =>  $fromUser,
-            'CreateTime' =>  $time,
-            'MsgType' =>  $msgType,
-            'Content' =>  $content,
-        ];
-        $template  =  ArrayToXml::arrayToXml($tmplateArr);
-        echo $template;
+        return ReposeText::reposeText($this->postObj,$content);
     }
 
 }
