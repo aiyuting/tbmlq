@@ -31,7 +31,7 @@ class WxMenu extends Controller
                         [
                             "type"=>"click",
                             "name"=>"帮助指令",
-                            "key"=>"helpCommond"
+                            "key"=>"helpCommand"
                         ],
                         [
                             "type"=>"view",

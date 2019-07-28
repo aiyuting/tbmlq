@@ -3,7 +3,9 @@ namespace app\tbmlqapi\controller;
 
 use app\tbmlqapi\tool\ArrayToXml;
 use app\tbmlqapi\tool\ReposeText;
+use app\tbmlqapi\withouapi\ZheTaoKe;
 use think\Controller;
+use think\facade\Config;
 
 class Index extends Controller
 {
@@ -81,24 +83,7 @@ class Index extends Controller
 ★领券商城下单的必须发送订单号手动跟单";
                 break;
             case 'helpCommand':
-                $content = "- [转圈] 机器人使用简单帮助 [转圈] -\r\n
-[勾引]发送商品给我查询奖励\r\n
-[太阳]常用一般指令：\r\n
-签到-说明:每天签到领取奖励\r\n
-资料-说明:查询您的详细资料\r\n
-余额-说明:查询您的账户余额\r\n
-提现-说明:申请提现如:提现10\r\n
-[月亮]常用修改指令:\r\n
-修改姓名发送：姓名 XX \r\n
-修改微信发送：微信 XX \r\n
-修改支付宝发送：支付宝 XX\r\n
-[疑问]常用查询指令：\r\n
-发送订单：查询最近省钱订单\r\n
-发送徒弟：查询当前徒弟数量\r\n
-发送明细：查询收入支出明细\r\n
-[拥抱]常用搜索指令\r\n
-发送：搜/买/找XX搜索优惠\r\n
-例如：搜女装|买男装|找音箱";
+                $content = Config::get('message.help');
                 break;
             default:
                 $content = '联系开发者,此处未完成';
@@ -118,28 +103,41 @@ class Index extends Controller
     {
         switch( $text )
         {
-            case 1:
-                $content = '你输入了个数字1';
+            case in_array(mb_substr(trim($text),0,1),['搜','买','领']):
+                $searchText = mb_substr(trim($text),1);
+                $url = 'http://www.mengqy.cn/index.php?input=2&r=l&kw='.$searchText;
+                $content = "[玫瑰]您好亲，已经为您搜索到相关优惠产品~\r\n
+<a href=\"{$url}\">▶点击查看綯寳商品>></a>\r\n
+- - - - - - - - - -
+提示：领券商城购买，必须手动发送订单号至公众号才能跟单哦~";
                 break;
-            case '电话':
-                $content = '12345678901';
-                break;
-            case '教程':
-                $content = "<a href='www.imooc.com'>慕课网</a>";
-                break;
-            case '博客':
-                $content = "<a href='blog.abc.com'>测试微信</a>";
+            case '帮助':
+                $content = Config::get('message.help');
                 break;
             default:
-                $content = "[微笑]您好，我是可以为您购物省钱的小管家
-- - - - - - - - - -
-[握手]发送商品链接，可为您查询优惠和奖励
-- - - - - - - - - -
-[鼓掌]商品搜索可发送：搜/买/找+关键词(例如：买衣服)
-- - - - - - - - - -
-<a href='http://www.mengqy.cn'>▶点击查看使用教程>></a>
-- - - - - - - - - -
-[疑问]更多命令请发送“帮助”查看";
+                $zhetaoke = new ZheTaoKe();
+                //调用查询商品id接口
+                $shopId = $zhetaoke->getShopId($text)['item_id'];
+                if(!empty($shopId)){
+
+                    //获取商品详情api
+                    $itemInfo = $zhetaoke->getItemInfo($shopId);
+                    //调取转链api
+                    $gaoyongInfo = $zhetaoke->gaoyongApiShopId($shopId);
+
+                    //如果有优惠券,那么就走二合一链接
+                    if(!empty($gaoyongInfo['coupon_remain_count'])){
+                        $url = $gaoyongInfo['coupon_click_url'];
+                    }else{
+                        $url = $gaoyongInfo['item_url'];
+                    }
+
+                    //调用转换淘口令链接.
+                    $tkl = $zhetaoke->getTkl($url,$itemInfo['pict_url'])['model'];
+                    $content = $tkl;
+                }else{
+                    $content = Config::get('message.otherMessage');
+                }
                 break;
         }
         ReposeText::reposeText($this->postObj,$content);
@@ -151,16 +149,7 @@ class Index extends Controller
 
     public function guanzhuGzh()
     {
-        $toUser    =  $this->postObj->FromUserName;
-        $fromUser  =  $this->postObj->ToUserName;
-        $time 	   =  time();
-        $msgType   =  'text';
-        $content   =  "「你购物 我奖励」我是您的省钱小管家，么么哒~!\r\n
-[勾引]请发送商品链接发送到公众号，我们会第一时间为您找到优惠信息~\r\n
-[拥抱]使用教程：<a href='http://www.baidu.com'>点击查看>></a>\r\n
-[鼓掌]商品搜索可发送：搜/买/找+关键词(例如：买衣服)\r\n
-[红包]新用户完成首次购物后可领取一份惊喜哦~\r\n
-[疑问]更多命令请发送“帮助”查看！";
+        $content   =  Config::get('message.gzgzh');
         ReposeText::reposeText($this->postObj,$content);
     }
 
