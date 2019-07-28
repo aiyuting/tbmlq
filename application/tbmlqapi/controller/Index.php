@@ -146,7 +146,7 @@ class Index extends Controller
                             'title'=>$shangpingName,
                             'description'=>"原价：$yuanjia\r\n券后价格：$quanhoujia\r\n佣金：$yongjin",
                             'picUrl'=>$logo,
-                            'url'=>'http://www.mengqy.cn',
+                            'url'=>"http://vip1234.zhiku.electronics-power.com/wx_api.html?taowords=({$tkl})&image=".base64_encode($logo),
                         ]
                     ];
                     //卡片.
