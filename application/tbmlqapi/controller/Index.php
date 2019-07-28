@@ -117,7 +117,7 @@ class Index extends Controller
             default:
                 $zhetaoke = new ZheTaoKe();
                 //调用查询商品id接口
-                $shopId = $zhetaoke->getShopId($text)['item_id'];
+                $shopId = $zhetaoke->getShopId($text)['item_id'] ?? '';
                 if(!empty($shopId)){
 
                     //获取商品详情api
