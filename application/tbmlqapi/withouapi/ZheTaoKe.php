@@ -28,7 +28,7 @@ class ZheTaoKe extends Controller
         $result = json_decode(Curl::send($url,'','get'),true);
         $result = json_decode(Curl::send($result['url'],'','get'),true);
 
-        return $result;
+        return $result['tbk_privilege_get_response']['result']['data'];
     }
 
     /**
@@ -60,6 +60,6 @@ class ZheTaoKe extends Controller
     {
         $url = $this->apiUrl."open_item_info.ashx?appkey={$this->appkey}&sid={$this->sid}&num_iids={$shopId}";
         $result = json_decode(Curl::send($url,'','get'),true);
-        return $result;
+        return $result['results']['n_tbk_item'][0];
     }
 }
