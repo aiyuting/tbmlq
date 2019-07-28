@@ -25,7 +25,7 @@ class ZheTaoKe extends Controller
     public function gaoyongApiShopId($shopId)
     {
         $url = $this->apiUrl."open_gaoyongzhuanlian.ashx?appkey={$this->appkey}&sid={$this->sid}&pid={$this->pid}&num_iid={$shopId}&signurl=1";
-        $result = json_decode(Curl::send($url,'','get'));
+        $result = json_decode(Curl::send($url,'','get'),true);
         return $result;
     }
 
@@ -35,7 +35,7 @@ class ZheTaoKe extends Controller
     public function getShopId($Oldurl)
     {
         $url = $this->apiUrl."open_shangpin_id.ashx?appkey={$this->appkey}&sid={$this->sid}&content={$Oldurl}&type=0";
-        $result = json_decode(Curl::send($url,'','get'));
+        $result = json_decode(Curl::send($url,'','get'),true);
         return $result;
     }
 
@@ -46,7 +46,7 @@ class ZheTaoKe extends Controller
     {
         $text = '买领券精心推荐';
         $url = $this->apiUrl."open_tkl_create.ashx?appkey={$this->appkey}&sid={$this->sid}&text={$text}&url={$Oldurl}&logo={$logo}&signurl=1";
-        $result = json_decode(Curl::send($url,'','get'));
+        $result = json_decode(Curl::send($url,'','get'),true);
         return $result;
     }
 
@@ -57,7 +57,7 @@ class ZheTaoKe extends Controller
     public function getItemInfo($shopId)
     {
         $url = $this->apiUrl."open_item_info.ashx?appkey={$this->appkey}&sid={$this->sid}&num_iids={$shopId}";
-        $result = json_decode(Curl::send($url,'','get'));
+        $result = json_decode(Curl::send($url,'','get'),true);
         return $result;
     }
 }
