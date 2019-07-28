@@ -49,7 +49,8 @@ class ZheTaoKe extends Controller
         $text = '买领券精心推荐';
         $url = $this->apiUrl."open_tkl_create.ashx?appkey={$this->appkey}&sid={$this->sid}&text={$text}&url={$Oldurl}&logo={$logo}&signurl=1";
         $result = json_decode(Curl::send($url,'','get'),true);
-        return $result;
+        $result = json_decode(Curl::send($result['url'],'','get'),true);
+        return $result['tbk_tpwd_create_response']['data'];
     }
 
     /**
@@ -60,6 +61,6 @@ class ZheTaoKe extends Controller
     {
         $url = $this->apiUrl."open_item_info.ashx?appkey={$this->appkey}&sid={$this->sid}&num_iids={$shopId}";
         $result = json_decode(Curl::send($url,'','get'),true);
-        return $result['results']['n_tbk_item'][0];
+        return $result['tbk_item_info_get_response']['results']['n_tbk_item'][0];
     }
 }
