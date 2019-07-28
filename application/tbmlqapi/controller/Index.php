@@ -119,7 +119,6 @@ class Index extends Controller
                 //调用查询商品id接口
                 $shopId = $zhetaoke->getShopId($text)['item_id'] ?? '';
                 if(!empty($shopId)){
-                    ReposeText::reposeText($this->postObj,'正在努力查询中,请稍后...');
                     //获取商品详情api
                     $itemInfo = $zhetaoke->getItemInfo($shopId);
                     //调取转链api
