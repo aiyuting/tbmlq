@@ -25,6 +25,6 @@ class ReposeText extends Controller
             'Content' =>  $content,
         ];
         $template   =  ArrayToXml::arrayToXml($tmplateArr);
-        return $template;
+        echo $template;
     }
 }

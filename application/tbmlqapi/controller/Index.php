@@ -105,7 +105,7 @@ class Index extends Controller
                 break;
         }
 
-        return ReposeText::reposeText($this->postObj,$content);
+        ReposeText::reposeText($this->postObj,$content);
     }
 
 
@@ -142,7 +142,7 @@ class Index extends Controller
 [疑问]更多命令请发送“帮助”查看";
                 break;
         }
-        return ReposeText::reposeText($this->postObj,$content);
+        ReposeText::reposeText($this->postObj,$content);
     }
 
     /**
@@ -161,7 +161,7 @@ class Index extends Controller
 [鼓掌]商品搜索可发送：搜/买/找+关键词(例如：买衣服)\r\n
 [红包]新用户完成首次购物后可领取一份惊喜哦~\r\n
 [疑问]更多命令请发送“帮助”查看！";
-        return ReposeText::reposeText($this->postObj,$content);
+        ReposeText::reposeText($this->postObj,$content);
     }
 
 }
