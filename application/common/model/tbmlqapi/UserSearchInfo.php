@@ -14,7 +14,7 @@ class UserSearchInfo extends Model
             ->where(['itemid'=>$ItemId])
             ->where(['openid'=>$FromUserName])
             ->find();
-        return $result;
+        return $result['id'];
     }
 
     /**
@@ -24,8 +24,7 @@ class UserSearchInfo extends Model
     {
         $result = self::field('tk_pid')
             ->where(['itemid'=>$ItemId])
-            ->select()
-            ->toArray();
+            ->select();
         //用来存放tk_pid的数组 一位数组
         $resultArr = [];
         foreach ($result as $k => $v) {
