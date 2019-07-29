@@ -32,7 +32,7 @@ class GuanzhuUserInfo extends Model
         $result = self::field('tb_order_num')
             ->where(['openid'=>$openId])
             ->find();
-        if(!empty($result)){
+        if(!empty($result['tb_order_num'])){
             return true;
         }
         return false;
