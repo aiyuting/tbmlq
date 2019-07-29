@@ -27,9 +27,12 @@ class UserSearchInfo extends Model
             ->select();
         //用来存放tk_pid的数组 一位数组
         $resultArr = [];
-        foreach ($result as $k => $v) {
-            array_push($resultArr,$v['tk_pid']);
+        if(!empty($result)){
+            foreach ($result as $k => $v) {
+                array_push($resultArr,$v['tk_pid']);
+            }
         }
+
         return $resultArr;
     }
 }

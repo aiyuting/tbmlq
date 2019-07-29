@@ -266,7 +266,7 @@ class Index extends Controller
 
         //查询出这个商品id已经拿到的pid 那么分配pid的时候去除此pid
         $pidArr = UserSearchInfo::selectItemIdPid($ItemId);
-        $allPidArr = Config::get('tkpid');
+        $allPidArr = Config::get('tkpid.allPid');
         //取出可以分配的pid
         $newPidArr = array_diff($allPidArr,$pidArr);
         if(empty($newPidArr)){
