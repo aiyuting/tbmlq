@@ -15,6 +15,7 @@ class Index extends Controller
 
     private $wechatToken = 'wenhao';
     private $postObj;
+    private $wxUserInfo; //用户关注之后才有哦 look : guanzhuGzh(); 这个方法之后 才有信息。
     public function index()
     {
         return 'this is for Wechat';
@@ -199,6 +200,8 @@ class Index extends Controller
 
         //获取用户的详细信息
         $wxUserInfo = Wx::getWxUserInfo($this->postObj->FromUserName);
+        $this->wxUserInfo = $wxUserInfo;
+
         //入库
         $guanzhuUserInfo = new GuanzhuUserInfo();
         $guanzhuUserInfo->subscribe = $wxUserInfo['subscribe'] ?? '';
