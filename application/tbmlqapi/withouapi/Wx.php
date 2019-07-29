@@ -16,7 +16,7 @@ class Wx extends Controller
     {
         $access_token = GetWxToken::getWxToken();
         $getUserInfoUrl = "https://api.weixin.qq.com/cgi-bin/user/info?access_token={$access_token}&openid={$openId}&lang=zh_CN";
-        $result = json_decode(Curl::send($getUserInfoUrl,''),true);
+        $result = json_decode(Curl::send($getUserInfoUrl,'','get'),true);
         return $result;
     }
 }
