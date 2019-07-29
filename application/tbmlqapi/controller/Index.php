@@ -91,7 +91,7 @@ class Index extends Controller
 - - - - - - - - - -
 ★领券商城下单的必须发送订单号手动跟单";
                 break;
-            case 'helpCommand':
+            case 'helpcommand':
                 $content = Config::get('message.help');
                 break;
             default:
