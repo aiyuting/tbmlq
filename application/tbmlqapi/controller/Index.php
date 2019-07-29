@@ -198,7 +198,7 @@ class Index extends Controller
         /***对关注公众号的用户进行入库操作.(详细信息)*****/
 
         //获取用户的详细信息
-        $wxUserInfo = Wx::getWxUserInfo($this->postObj->ToUserName);
+        $wxUserInfo = Wx::getWxUserInfo($this->postObj->FromUserName);
         //入库
         $guanzhuUserInfo = new GuanzhuUserInfo();
         $guanzhuUserInfo->subscribe = $wxUserInfo['subscribe'] ?? '';
@@ -230,7 +230,7 @@ class Index extends Controller
     public function quxiaoguanzhuGzh()
     {
         //对取消关注公众号的用户进行表数据删除操作.
-        GuanzhuUserInfo::delUserForOpenId($this->postObj->ToUserName);
+        GuanzhuUserInfo::delUserForOpenId($this->postObj->FromUserName);
     }
 
 }
