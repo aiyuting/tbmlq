@@ -2,6 +2,7 @@
 namespace app\common\model\tbmlqapi;
 
 use think\Model;
+use think\Url;
 
 /**
  * 关注用户的表
@@ -18,5 +19,22 @@ class GuanzhuUserInfo extends Model
         $result = self::where(['openid'=>$openId])
             ->delete();
         return $result;
+    }
+
+
+    /**
+     * 根据openid 查询是否存在 tb_order_num (用户淘宝账号对应的淘宝订单后六位。) 此字段
+     */
+
+    public static function isTbOrderNum()
+    {
+        $openId = session('wxuserinfo')->FromUserName;
+        $result = self::field('tb_order_num')
+            ->where(['openid'=>$openId])
+            ->find();
+        if(!empty($result)){
+            return true;
+        }
+        return false;
     }
 }

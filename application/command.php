@@ -9,4 +9,7 @@
 // | Author: yunwuxin <448901948@qq.com>
 // +----------------------------------------------------------------------
 
-return [];
+return [
+    // 定时任务：轮训查询订单.
+    'orderForeach'	=>	'app\common\command\OrderForeach',
+];

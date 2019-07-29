@@ -2,9 +2,11 @@
 namespace app\tbmlqapi\controller;
 
 use app\common\model\tbmlqapi\GuanzhuUserInfo;
+use app\common\model\tbmlqapi\UserSearchInfo;
 use app\tbmlqapi\tool\ArrayToXml;
 use app\tbmlqapi\tool\Curl;
 use app\tbmlqapi\tool\ReposeText;
+use app\tbmlqapi\tool\YonjingJisuan;
 use app\tbmlqapi\withouapi\Wx;
 use app\tbmlqapi\withouapi\ZheTaoKe;
 use think\Controller;
@@ -51,6 +53,9 @@ class Index extends Controller
         $postArr = file_get_contents("php://input");	//接受xml数据
         //2.处理消息类型,推送消息
         $postObj = simplexml_load_string( $postArr );	//将xml数据转化为对象
+
+        //将当前的数据存储到session里面
+        session('wxuserinfo',$postObj);
         $this->postObj = $postObj;
         //获取msgType
         $msgType = strtolower( $postObj->MsgType );
@@ -152,7 +157,10 @@ class Index extends Controller
                     $quanhoujia = $itemInfo['quanhou_jiage'];//券后价格
                     $shangpingName = $itemInfo['title'];//商品名字
                     //此处所有佣金. (高级用户,后期需要配合设置的百分比进行.)
-                    $yongjin = round($quanhoujia * $itemInfo['tkrate3'] * 0.9 / 100,2);//商品的全部佣金.(保留两位)
+                    $yongjin = YonjingJisuan::yongjingjisuan($quanhoujia,$itemInfo['tkrate3']); //计算佣金
+                    //用session存储佣金.
+                    session($shopId,$yongjin);
+
                     $kapianArr = [
                         [
                             'title'=>$shangpingName,
@@ -161,6 +169,15 @@ class Index extends Controller
                             'url'=>"http://vip1234.zhiku.electronics-power.com/wx_api.html?taowords=({$tkl})&image=".base64_encode($logo),
                         ]
                     ];
+
+
+                    //如果当前用户表有存储的该用户的订单号后六位,那么就不用在存储到搜索库里面了..
+                    if(GuanzhuUserInfo::isTbOrderNum() === false){
+                        //将用户搜索的商品存储到库里面
+                        $this->saveUserSearchInfo($shopId,$this->postObj->FromUserName);
+                    }
+
+
                     //卡片.
                     $toUser = $this->postObj->FromUserName;
                     $fromUser = $this->postObj->ToUserName;
@@ -234,6 +251,36 @@ class Index extends Controller
     {
         //对取消关注公众号的用户进行表数据删除操作.
         GuanzhuUserInfo::delUserForOpenId($this->postObj->FromUserName);
+    }
+
+    /**
+     * 将用户搜索到的数据存储到库里面。
+     */
+    public function saveUserSearchInfo($ItemId,$FromUserName)
+    {
+        //如果该用户以及他搜索的商品id已经存储到库里面了。那么就不存储了
+        $userAndIeemrResult = UserSearchInfo::findUserAndItemId($ItemId,$FromUserName);
+        if(!empty($userAndIeemrResult)){
+            return false;
+        }
+
+        //查询出这个商品id已经拿到的pid 那么分配pid的时候去除此pid
+        $pidArr = UserSearchInfo::selectItemIdPid($ItemId);
+        $allPidArr = Config::get('tkpid');
+        //取出可以分配的pid
+        $newPidArr = array_diff($allPidArr,$pidArr);
+        if(empty($newPidArr)){
+            ReposeText::reposeText($this->postObj,'抱歉,无可分配的pid,请联系管理员qq:854854321');
+        }
+
+        //取第一个pid给这个商品的pid
+        $givePidToItemId = $newPidArr[0];
+        $usersearchInfo = new UserSearchInfo();
+        $usersearchInfo->openid = $FromUserName;
+        $usersearchInfo->itemid = $ItemId;
+        $usersearchInfo->tk_pid = $givePidToItemId;
+        $usersearchInfo->save();
+
     }
 
 }

@@ -75,4 +75,20 @@ class ZheTaoKe extends Controller
         }
 
     }
+
+    /**
+     * 订单查询API接口
+     */
+
+    public function selectTaoKeOrder()
+    {
+        //前一分钟内的数据
+        $start_time = urlencode(date("Y-m-d H:i:s", strtotime("-1 minute")));
+        $span = 60;
+        $page_size = 100;
+        $visitUrl = $this->apiUrl."open_dingdanchaxun.ashx?appkey={$this->appkey}&sid={$this->sid}&start_time={$start_time}&span={$span}&page_size={$page_size}&signurl=1";
+        $result = json_decode(Curl::send($visitUrl,'','get'),true);
+        $result = json_decode(Curl::send($result['url'],'','get'),true);
+        return $result['tbk_sc_order_get_response']['results']['n_tbk_order'] ?? '';
+    }
 }
