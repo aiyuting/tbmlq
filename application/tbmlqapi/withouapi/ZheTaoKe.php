@@ -67,7 +67,7 @@ class ZheTaoKe extends Controller
             foreach ($contentArr as $k => $v) {
                 //优先选取G券
                 if($v['code'] == 0){
-                    return $result['content'][0] ?? '';
+                    return $v;
                 }
             }
         }else{
