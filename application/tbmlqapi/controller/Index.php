@@ -1,8 +1,11 @@
 <?php
 namespace app\tbmlqapi\controller;
 
+use app\common\model\tbmlqapi\GuanzhuUserInfo;
 use app\tbmlqapi\tool\ArrayToXml;
+use app\tbmlqapi\tool\Curl;
 use app\tbmlqapi\tool\ReposeText;
+use app\tbmlqapi\withouapi\Wx;
 use app\tbmlqapi\withouapi\ZheTaoKe;
 use think\Controller;
 use think\facade\Config;
@@ -57,6 +60,11 @@ class Index extends Controller
                 if( strtolower( $postObj->Event ) == 'subscribe' )
                 {
                     $this->guanzhuGzh();
+                }
+                //取消关注公众号事件
+                if( strtolower( $postObj->Event ) == 'unsubscribe' )
+                {
+                    $this->quxiaoguanzhuGzh();
                 }
                 //单机菜单事件
                 if( strtolower( $postObj->Event ) == 'click' )
@@ -187,8 +195,42 @@ class Index extends Controller
 
     public function guanzhuGzh()
     {
+        /***对关注公众号的用户进行入库操作.(详细信息)*****/
+
+        //获取用户的详细信息
+        $wxUserInfo = Wx::getWxUserInfo($this->postObj->ToUserName);
+        //入库
+        $guanzhuUserInfo = new GuanzhuUserInfo();
+        $guanzhuUserInfo->subscribe = $wxUserInfo['subscribe'] ?? '';
+        $guanzhuUserInfo->openid = $wxUserInfo['openid'] ?? '';
+        $guanzhuUserInfo->nickname = $wxUserInfo['nickname'] ?? '';
+        $guanzhuUserInfo->sex = $wxUserInfo['sex'] ?? '';
+        $guanzhuUserInfo->city = $wxUserInfo['city'] ?? '';
+        $guanzhuUserInfo->country = $wxUserInfo['country'] ?? '';
+        $guanzhuUserInfo->province = $wxUserInfo['province'] ?? '';
+        $guanzhuUserInfo->language = $wxUserInfo['language'] ?? '';
+        $guanzhuUserInfo->headimgurl = $wxUserInfo['headimgurl'] ?? '';
+        $guanzhuUserInfo->subscribe_time = $wxUserInfo['subscribe_time'] ?? '';
+        $guanzhuUserInfo->unionid = $wxUserInfo['unionid'] ?? '';
+        $guanzhuUserInfo->remark = $wxUserInfo['remark'] ?? '';
+        $guanzhuUserInfo->groupid = $wxUserInfo['groupid'] ?? '';
+        $guanzhuUserInfo->tagid_list = $wxUserInfo['tagid_list'] ?? '';
+        $guanzhuUserInfo->subscribe_scene = $wxUserInfo['subscribe_scene'] ?? '';
+        $guanzhuUserInfo->qr_scene = $wxUserInfo['qr_scene'] ?? '';
+        $guanzhuUserInfo->qr_scene_str = $wxUserInfo['qr_scene_str'] ?? '';
+        $guanzhuUserInfo->save();
+
+        /***************结束************/
         $content   =  Config::get('message.gzgzh');
         ReposeText::reposeText($this->postObj,$content);
+    }
+    /**
+     * 取消关注公众号的事件
+     */
+    public function quxiaoguanzhuGzh()
+    {
+        //对取消关注公众号的用户进行表数据删除操作.
+        GuanzhuUserInfo::delUserForOpenId($this->postObj->ToUserName);
     }
 
 }
