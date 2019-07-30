@@ -16,9 +16,13 @@ class YonjingJisuan extends Controller
      * @param $bili 赚钱比例
      * @return float
      */
-    public static function yongjingjisuan($quanhoujia,$bili)
+    public static function yongjingjisuan($quanhoujia,$bili,$suoyouyongjin='')
     {
-        $yongjin = round($quanhoujia * $bili * 0.9 / 100,2);//商品的全部佣金.(保留两位);
+        if(!empty($suoyouyongjin)){
+            $yongjin = round($suoyouyongjin * 0.9,2);//商品的全部佣金.(保留两位);
+        }else{
+            $yongjin = round($quanhoujia * $bili * 0.9 / 100,2);//商品的全部佣金.(保留两位);
+        }
         return $yongjin;
     }
 }
