@@ -82,15 +82,19 @@ class ZheTaoKe extends Controller
 
     /**
      * 订单查询API接口
+     * @param $order_query_type 订单查询类型，创建时间“create_time”，或结算时间“settle_time”
+     * @param $tk_status 订单状态
+     * @return string
      */
 
-    public function selectTaoKeOrder()
+    public function selectTaoKeOrder($order_query_type,$tk_status)
     {
-        //前一分钟内的数据
-        $start_time = urlencode(date("Y-m-d H:i:s", strtotime("-1 minute")));
-        $span = 60;
+
+        //开始时间
+        $start_time = urlencode(date("Y-m-d H:i:s", strtotime("-20 minute")));
+        $span = 1200;
         $page_size = 100;
-        $visitUrl = $this->apiUrl."open_dingdanchaxun.ashx?appkey={$this->appkey}&sid={$this->sid}&start_time={$start_time}&span={$span}&page_size={$page_size}&signurl=1";
+        $visitUrl = $this->apiUrl."open_dingdanchaxun.ashx?appkey={$this->appkey}&sid={$this->sid}&start_time={$start_time}&span={$span}&page_size={$page_size}&signurl=1&order_query_type={$order_query_type}&tk_status={$tk_status}";
         $result = json_decode(Curl::send($visitUrl,'','get'),true);
         $result = json_decode(Curl::send($result['url'],'','get'),true);
         return $result['tbk_sc_order_get_response']['results']['n_tbk_order'] ?? '';

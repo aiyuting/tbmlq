@@ -6,35 +6,31 @@ use app\common\model\tbmlqapi\TaobaokeOrderList;
 use app\tbmlqapi\withouapi\ZheTaoKe;
 use think\console\Command;
 use think\console\Input;
-use think\console\input\Argument;
 use think\console\Output;
 
 /**
- * 定时任务：轮训查询订单.
+ * 定时任务： 轮训查询已经结算的订单.
  * Class OrderLunxun
  * @package app\command\OrderLunxun
  */
-class OrderForeach extends Command
+class OrderJiesuan extends Command
 {
     protected function configure()
     {
-        $this->setName('orderForeach')
-            ->setDescription('Lunxun select Order for TaoBaoke');
+        $this->setName('orderJiesuan')
+            ->setDescription('Lunxun select jiesuan Order');
     }
 
     protected function execute(Input $input, Output $output)
     {
         $zhetaoke = new ZheTaoKe();
         //返回来一个订单数组.
-        $orderList = $zhetaoke->selectTaoKeOrder();
-
+        $orderList = $zhetaoke->selectTaoKeOrder('settle_time',3);
         //此处可以后期优化成redis  用队列在处理一遍.以防后期数据量大了 数据存储不完整。
         if(!empty($orderList)){
             foreach ($orderList as $k => $v){
                 //如果订单付款了.
-                if($v['tk_status'] == 12){
-                    TaobaokeOrderList::fukuanchuli($v['adzone_id'],$v['trade_id'],$v['num_iid']);
-                }
+                TaobaokeOrderList::jiesuanchuli($v['trade_id']);
                 //如果订单号一样 那么就修改
                 $trade_id_re = TaobaokeOrderList::field('id')->where(['trade_id'=>$v['trade_id']])->find();
                 if(!$trade_id_re){

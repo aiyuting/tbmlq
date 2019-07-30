@@ -98,4 +98,21 @@ class TaobaokeOrderList extends Model
 
 
     }
+
+    /**
+     *
+     */
+
+    public function jiesuanchuli($orderNum)
+    {
+        //取订单号的后六位
+        $orderNumHou6wei = substr($orderNum,-6);
+        //查询淘宝号对应的用户
+        $userinfo = GuanzhuUserInfo::field('dongjie_money,yunxu_money')
+            ->where(['tb_order_num'=>$orderNumHou6wei])
+            ->find();
+        $userinfo->dongjie_money = 0;
+        $userinfo->yunxu_money = $userinfo['dongjie_money']+$userinfo['yunxu_money'];
+        $userinfo->save();
+    }
 }

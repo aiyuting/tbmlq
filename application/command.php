@@ -10,6 +10,8 @@
 // +----------------------------------------------------------------------
 
 return [
-    // 定时任务：轮训查询订单.
-    'orderForeach'	=>	'app\common\command\OrderForeach',
+    // 定时任务： 轮训查询付款订单.
+    'orderFukuan'	=>	'app\common\command\OrderFukuan',
+    // 定时任务： 轮训查询已经结算的订单.
+    'orderJiesuan'	=>	'app\common\command\OrderJiesuan',
 ];
