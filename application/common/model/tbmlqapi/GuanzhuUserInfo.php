@@ -17,7 +17,7 @@ class GuanzhuUserInfo extends Model
     public static function updateUserIsQXGZ($openId)
     {
         $result = self::where(['openid'=>$openId])
-            ->update(['is_qxgz'=>date('Y-m-d H:i:s')]);
+            ->update(['is_qxgz'=>time()]);
         return $result;
     }
 
