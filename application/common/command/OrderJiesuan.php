@@ -25,7 +25,7 @@ class OrderJiesuan extends Command
     {
         $zhetaoke = new ZheTaoKe();
         //返回来一个订单数组.
-        $orderList = $zhetaoke->selectTaoKeOrder('settle_time',3);
+        $orderList = $zhetaoke->selectTaoKeOrder('settle_time',3,20);
         //此处可以后期优化成redis  用队列在处理一遍.以防后期数据量大了 数据存储不完整。
         if(!empty($orderList)){
             foreach ($orderList as $k => $v){
