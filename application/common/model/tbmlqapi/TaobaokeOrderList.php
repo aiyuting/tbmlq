@@ -86,13 +86,14 @@ class TaobaokeOrderList extends Model
             $user->tb_order_num = $orderNumHou6wei;
             $user->dongjie_money = session($itemId);
             $saveUserInfoResult = $user->save();
-        }
-        if($saveUserInfoResult){
-            //删除用户的搜索记录。
-            if($openid->delete()){
-                return true;
+            if($saveUserInfoResult){
+                //删除用户的搜索记录。
+                if($openid->delete()){
+                    return true;
+                }
             }
         }
+
 
 
 
