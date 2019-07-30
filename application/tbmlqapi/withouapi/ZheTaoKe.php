@@ -63,6 +63,10 @@ class ZheTaoKe extends Controller
         $url = $this->apiUrl."api_detail.ashx?appkey={$this->appkey}&tao_id={$shopId}";
         $result = json_decode(Curl::send($url,'','get'),true);
         $contentArr = $result['content'] ?? '';
+        //如果就一个 那么就直接返回吧。
+        if(count($contentArr) == 1){
+            return $contentArr[0];
+        }
         if(!empty($contentArr) && is_array($contentArr)){
             foreach ($contentArr as $k => $v) {
                 //优先选取G券
