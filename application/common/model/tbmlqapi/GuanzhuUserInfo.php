@@ -37,4 +37,15 @@ class GuanzhuUserInfo extends Model
         }
         return false;
     }
+
+    /**
+     * 根据用户openid获取他的详细信息.
+     */
+    public static function getInfoForOpenId()
+    {
+        $openId = session('wxuserinfo')->FromUserName;
+        $result = self::where(['openid'=>$openId])
+            ->find();
+        return $result;
+    }
 }

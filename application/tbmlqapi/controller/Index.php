@@ -99,6 +99,30 @@ class Index extends Controller
             case 'helpcommand':
                 $content = Config::get('message.help');
                 break;
+            case 'wdzh':
+                $user = $this->wxUserInfo['nickname'];
+                $nowUserInfo = GuanzhuUserInfo::getInfoForOpenId();
+                $tk_name = $nowUserInfo['tk_name'] ?? '未设置';
+                $tk_zfb = $nowUserInfo['tk_zfb'] ?? '未设置';
+                $tk_wx = $nowUserInfo['tk_wx'] ?? '未设置';
+                $dongjie_money = $nowUserInfo['$dongjie_money'];
+                $yunxu_money = $nowUserInfo['yunxu_money'];
+                $content = "━ [玫瑰]个 人 信 息[玫瑰] ━ 
+[微笑]我的昵称：{$user}
+[拥抱]账户级别：普通会员
+[微笑]我的姓名：{$tk_name}
+[微笑]支付宝号：{$tk_zfb}
+[微笑]我的微信：{$tk_wx}
+[爱情]我的师傅：无邀请人
+[强]冻结余额(确认收货即可提现)：{$dongjie_money}元
+[胜利]可提现金额：{$yunxu_money}元
+[疑问]更多命令请发送“帮助”查看
+- - - - - - - - - -
+[微笑]修改姓名： 姓名 XX
+[微笑]修改微信： 微信 XX
+[微笑]改支付宝： 支付宝 XX
+[拥抱]资料可等提现的时候再设置";
+                break;
             default:
                 $content = '联系开发者,此处未完成';
                 break;
