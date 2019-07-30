@@ -284,12 +284,17 @@ class Index extends Controller
      */
     public function saveUserSearchInfo($ItemId,$FromUserName)
     {
+        //如果该用户以及他搜索的商品id已经存储到库里面了。那么就不存储了
+        $userAndIeemrResult = UserSearchInfo::findUserAndItemId($ItemId,$FromUserName);
+        if(!empty($userAndIeemrResult)){
+            return false;
+        }
 
         //查询出这个商品id已经拿到的pid 那么分配pid的时候去除此pid
         $pidArr = UserSearchInfo::selectItemIdPid($ItemId);
         $allPidArr = Config::get('tkpid.allPid');
         //取出可以分配的pid
-        $newPidArr = array_diff($allPidArr,$pidArr);
+        $newPidArr = array_values(array_diff($allPidArr,$pidArr));
         if(empty($newPidArr)){
             ReposeText::reposeText($this->postObj,'抱歉,无可分配的pid,请联系管理员qq:854854321');
         }
