@@ -84,10 +84,10 @@ class TaobaokeOrderList extends Model
         $yongjing = YonjingJisuan::yongjingjisuan($suoyouyongjin); //计算佣金;
         if($user['tb_order_num'] == $orderNumHou6wei){
             $user->dongjie_money = $yongjing;
-            $saveUserInfoResult = $user->save();
+            $user->save();
         }else{
             $user->tb_order_num = $orderNumHou6wei;
-            $user->dongjie_money = $yongjing;
+            $user->yunxu_money = $yongjing;
             $saveUserInfoResult = $user->save();
             if($saveUserInfoResult){
                 //删除用户的搜索记录。
