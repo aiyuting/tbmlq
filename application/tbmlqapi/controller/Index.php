@@ -260,7 +260,7 @@ class Index extends Controller
             $nowUserInfo->subscribe_scene = $wxUserInfo['subscribe_scene'] ?? '';
             $nowUserInfo->qr_scene = $wxUserInfo['qr_scene'] ?? '';
             $nowUserInfo->qr_scene_str = $wxUserInfo['qr_scene_str'] ?? '';
-            $nowUserInfo->id_qxgz = '';
+            $nowUserInfo->is_qxgz = '';
             $nowUserInfo->save();
         }
 
