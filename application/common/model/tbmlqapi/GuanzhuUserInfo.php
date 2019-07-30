@@ -12,12 +12,12 @@ use think\Url;
 class GuanzhuUserInfo extends Model
 {
     /**
-     * 根据openid删除一个用户信息.(取消关注的时候调用, 其他不可调用.)
+     * 取消关注.(取消关注的时候调用, 其他不可调用.)
      */
-    public static function delUserForOpenId($openId)
+    public static function updateUserIsQXGZ($openId)
     {
         $result = self::where(['openid'=>$openId])
-            ->delete();
+            ->update(['is_qxgz'=>date('Y-m-d H:i:s')]);
         return $result;
     }
 

@@ -117,8 +117,8 @@ class Index extends Controller
     {
         switch( $text )
         {
-            case in_array(mb_substr(trim($text),0,1),['搜','买','领']):
-                $searchText = mb_substr(trim($text),1);
+            case in_array(mb_substr($text,0,1),['搜','买','领']):
+                $searchText = mb_substr($text,1);
                 $url = 'http://www.mengqy.cn/index.php?input=2&r=l&kw='.$searchText;
                 $content = "[玫瑰]您好亲，已经为您搜索到相关优惠产品~\r\n
 <a href=\"{$url}\">▶点击查看綯寳商品>></a>\r\n
@@ -249,8 +249,8 @@ class Index extends Controller
      */
     public function quxiaoguanzhuGzh()
     {
-        //对取消关注公众号的用户进行表数据删除操作.
-        GuanzhuUserInfo::delUserForOpenId($this->postObj->FromUserName);
+        //对取消关注公众号的用户进行表取消关注字段的更改
+        GuanzhuUserInfo::updateUserIsQXGZ($this->postObj->FromUserName);
     }
 
     /**
