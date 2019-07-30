@@ -81,7 +81,7 @@ class TaobaokeOrderList extends Model
         $user = GuanzhuUserInfo::field('id','tb_order_num')
             ->where(['openid'=>$openid['openid']])
             ->find();
-        $yongjing = YonjingJisuan::yongjingjisuan($suoyouyongjin); //计算佣金;
+        $yongjing = YonjingJisuan::yongjingjisuan('','',$suoyouyongjin); //计算佣金;
         if($user['tb_order_num'] == $orderNumHou6wei){
             $user->dongjie_money = $yongjing;
             $user->save();
