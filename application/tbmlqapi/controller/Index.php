@@ -218,27 +218,51 @@ class Index extends Controller
         //获取用户的详细信息
         $wxUserInfo = Wx::getWxUserInfo($this->postObj->FromUserName);
         $this->wxUserInfo = $wxUserInfo;
+        $nowUserInfo = GuanzhuUserInfo::where(['openid'=>$this->postObj->FromUserName])
+            ->value('id');
+        if(empty($nowUserInfo)){
+            //入库
+            $guanzhuUserInfo = new GuanzhuUserInfo();
+            $guanzhuUserInfo->subscribe = $wxUserInfo['subscribe'] ?? '';
+            $guanzhuUserInfo->openid = $wxUserInfo['openid'] ?? '';
+            $guanzhuUserInfo->nickname = $wxUserInfo['nickname'] ?? '';
+            $guanzhuUserInfo->sex = $wxUserInfo['sex'] ?? '';
+            $guanzhuUserInfo->city = $wxUserInfo['city'] ?? '';
+            $guanzhuUserInfo->country = $wxUserInfo['country'] ?? '';
+            $guanzhuUserInfo->province = $wxUserInfo['province'] ?? '';
+            $guanzhuUserInfo->language = $wxUserInfo['language'] ?? '';
+            $guanzhuUserInfo->headimgurl = $wxUserInfo['headimgurl'] ?? '';
+            $guanzhuUserInfo->subscribe_time = $wxUserInfo['subscribe_time'] ?? '';
+            $guanzhuUserInfo->unionid = $wxUserInfo['unionid'] ?? '';
+            $guanzhuUserInfo->remark = $wxUserInfo['remark'] ?? '';
+            $guanzhuUserInfo->groupid = $wxUserInfo['groupid'] ?? '';
+            $guanzhuUserInfo->tagid_list = $wxUserInfo['tagid_list'] ?? '';
+            $guanzhuUserInfo->subscribe_scene = $wxUserInfo['subscribe_scene'] ?? '';
+            $guanzhuUserInfo->qr_scene = $wxUserInfo['qr_scene'] ?? '';
+            $guanzhuUserInfo->qr_scene_str = $wxUserInfo['qr_scene_str'] ?? '';
+            $guanzhuUserInfo->save();
+        }else{
+            //修改
+            $nowUserInfo->subscribe = $wxUserInfo['subscribe'] ?? '';
+            $nowUserInfo->openid = $wxUserInfo['openid'] ?? '';
+            $nowUserInfo->nickname = $wxUserInfo['nickname'] ?? '';
+            $nowUserInfo->sex = $wxUserInfo['sex'] ?? '';
+            $nowUserInfo->city = $wxUserInfo['city'] ?? '';
+            $nowUserInfo->country = $wxUserInfo['country'] ?? '';
+            $nowUserInfo->province = $wxUserInfo['province'] ?? '';
+            $nowUserInfo->language = $wxUserInfo['language'] ?? '';
+            $nowUserInfo->headimgurl = $wxUserInfo['headimgurl'] ?? '';
+            $nowUserInfo->subscribe_time = $wxUserInfo['subscribe_time'] ?? '';
+            $nowUserInfo->unionid = $wxUserInfo['unionid'] ?? '';
+            $nowUserInfo->remark = $wxUserInfo['remark'] ?? '';
+            $nowUserInfo->groupid = $wxUserInfo['groupid'] ?? '';
+            $nowUserInfo->tagid_list = $wxUserInfo['tagid_list'] ?? '';
+            $nowUserInfo->subscribe_scene = $wxUserInfo['subscribe_scene'] ?? '';
+            $nowUserInfo->qr_scene = $wxUserInfo['qr_scene'] ?? '';
+            $nowUserInfo->qr_scene_str = $wxUserInfo['qr_scene_str'] ?? '';
+            $nowUserInfo->save();
+        }
 
-        //入库
-        $guanzhuUserInfo = new GuanzhuUserInfo();
-        $guanzhuUserInfo->subscribe = $wxUserInfo['subscribe'] ?? '';
-        $guanzhuUserInfo->openid = $wxUserInfo['openid'] ?? '';
-        $guanzhuUserInfo->nickname = $wxUserInfo['nickname'] ?? '';
-        $guanzhuUserInfo->sex = $wxUserInfo['sex'] ?? '';
-        $guanzhuUserInfo->city = $wxUserInfo['city'] ?? '';
-        $guanzhuUserInfo->country = $wxUserInfo['country'] ?? '';
-        $guanzhuUserInfo->province = $wxUserInfo['province'] ?? '';
-        $guanzhuUserInfo->language = $wxUserInfo['language'] ?? '';
-        $guanzhuUserInfo->headimgurl = $wxUserInfo['headimgurl'] ?? '';
-        $guanzhuUserInfo->subscribe_time = $wxUserInfo['subscribe_time'] ?? '';
-        $guanzhuUserInfo->unionid = $wxUserInfo['unionid'] ?? '';
-        $guanzhuUserInfo->remark = $wxUserInfo['remark'] ?? '';
-        $guanzhuUserInfo->groupid = $wxUserInfo['groupid'] ?? '';
-        $guanzhuUserInfo->tagid_list = $wxUserInfo['tagid_list'] ?? '';
-        $guanzhuUserInfo->subscribe_scene = $wxUserInfo['subscribe_scene'] ?? '';
-        $guanzhuUserInfo->qr_scene = $wxUserInfo['qr_scene'] ?? '';
-        $guanzhuUserInfo->qr_scene_str = $wxUserInfo['qr_scene_str'] ?? '';
-        $guanzhuUserInfo->save();
 
         /***************结束************/
         $content   =  Config::get('message.gzgzh');
