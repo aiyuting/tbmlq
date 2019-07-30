@@ -218,8 +218,9 @@ class Index extends Controller
         //获取用户的详细信息
         $wxUserInfo = Wx::getWxUserInfo($this->postObj->FromUserName);
         $this->wxUserInfo = $wxUserInfo;
-        $nowUserInfo = GuanzhuUserInfo::where(['openid'=>$this->postObj->FromUserName])
-            ->value('id');
+        $nowUserInfo = GuanzhuUserInfo::field('id')
+            ->where(['openid'=>$this->postObj->FromUserName])
+            ->find();
         if(empty($nowUserInfo)){
             //入库
             $guanzhuUserInfo = new GuanzhuUserInfo();
