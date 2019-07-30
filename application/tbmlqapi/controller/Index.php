@@ -100,15 +100,15 @@ class Index extends Controller
                 $content = Config::get('message.help');
                 break;
             case 'wdzh':
-                $user = $this->wxUserInfo['nickname'];
                 $nowUserInfo = GuanzhuUserInfo::getInfoForOpenId();
+                $nickname = $nowUserInfo['nickname'];
                 $tk_name = $nowUserInfo['tk_name'] ?? '未设置';
                 $tk_zfb = $nowUserInfo['tk_zfb'] ?? '未设置';
                 $tk_wx = $nowUserInfo['tk_wx'] ?? '未设置';
-                $dongjie_money = $nowUserInfo['$dongjie_money'];
+                $dongjie_money = $nowUserInfo['dongjie_money'];
                 $yunxu_money = $nowUserInfo['yunxu_money'];
                 $content = "━ [玫瑰]个 人 信 息[玫瑰] ━ 
-[微笑]我的昵称：{$user}
+[微笑]我的昵称：{$nickname}
 [拥抱]账户级别：普通会员
 [微笑]我的姓名：{$tk_name}
 [微笑]支付宝号：{$tk_zfb}
