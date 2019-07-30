@@ -30,7 +30,7 @@ class OrderFukuan extends Command
         if(!empty($orderList)){
             foreach ($orderList as $k => $v){
                 //如果订单付款了.
-                TaobaokeOrderList::fukuanchuli($v['adzone_id'],$v['trade_id'],$v['num_iid']);
+                TaobaokeOrderList::fukuanchuli($v['adzone_id'],$v['trade_id'],$v['num_iid'],$v['alipay_total_price'],$v['total_commission_rate']);
                 //如果订单号一样 那么就修改
                 $trade_id_re = TaobaokeOrderList::field('id')->where(['trade_id'=>$v['trade_id']])->find();
                 if(!$trade_id_re){

@@ -1,6 +1,7 @@
 <?php
 namespace app\common\model\tbmlqapi;
 
+use app\tbmlqapi\tool\YonjingJisuan;
 use think\Model;
 
 /**
@@ -55,8 +56,10 @@ class TaobaokeOrderList extends Model
      * @param $pid 推广位id
      * @param $orderNum 订单号
      * @param $itemId 商品id
+     * @param $shijifukuan 实际付款金额(券后价格)
+     * @param $yongjinbili 佣金比例
      */
-    public static function fukuanchuli($pid,$orderNum,$itemId)
+    public static function fukuanchuli($pid,$orderNum,$itemId,$shijifukuan,$yongjinbili)
     {
         //取订单号的后六位
         $orderNumHou6wei = substr($orderNum,-6);
@@ -79,12 +82,13 @@ class TaobaokeOrderList extends Model
         $user = GuanzhuUserInfo::field('id','tb_order_num')
             ->where(['openid'=>$openid['openid']])
             ->find();
+        $yongjing = YonjingJisuan::yongjingjisuan($shijifukuan,$yongjinbili); //计算佣金;
         if($user['tb_order_num'] == $orderNumHou6wei){
-            $user->dongjie_money = session($itemId);
+            $user->dongjie_money = $yongjing;
             $saveUserInfoResult = $user->save();
         }else{
             $user->tb_order_num = $orderNumHou6wei;
-            $user->dongjie_money = session($itemId);
+            $user->dongjie_money = $yongjing;
             $saveUserInfoResult = $user->save();
             if($saveUserInfoResult){
                 //删除用户的搜索记录。

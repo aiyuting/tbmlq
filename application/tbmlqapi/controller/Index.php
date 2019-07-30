@@ -167,8 +167,6 @@ class Index extends Controller
                     $shangpingName = $itemInfo['title'];//商品名字
                     //此处所有佣金. (高级用户,后期需要配合设置的百分比进行.)
                     $yongjin = YonjingJisuan::yongjingjisuan($quanhoujia,$itemInfo['tkrate3']); //计算佣金
-                    //用session存储佣金.
-                    session($shopId,$yongjin);
 
                     $kapianArr = [
                         [
