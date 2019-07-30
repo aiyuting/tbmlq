@@ -132,10 +132,19 @@ class Index extends Controller
                 $zhetaoke = new ZheTaoKe();
                 //调用查询商品id接口
                 $shopId = $zhetaoke->getShopId($text)['item_id'] ?? '';
+
+
+                //如果当前用户表有存储的该用户的订单号后六位,那么就不用在存储到搜索库里面了..
+                if(GuanzhuUserInfo::isTbOrderNum() === false){
+                    //将用户搜索的商品存储到库里面
+                    $givePidToItemId = $this->saveUserSearchInfo($shopId,$this->postObj->FromUserName);
+                }else{
+                    $givePidToItemId = '';
+                }
                 if(!empty($shopId)){
 
                     //调取转链api
-                    $gaoyongInfo = $zhetaoke->gaoyongApiShopId($shopId);
+                    $gaoyongInfo = $zhetaoke->gaoyongApiShopId($shopId,$givePidToItemId);
                     if(empty($gaoyongInfo)){
                         ReposeText::reposeText($this->postObj,'此物品没优惠券');
                         exit;
@@ -170,12 +179,6 @@ class Index extends Controller
                         ]
                     ];
 
-
-                    //如果当前用户表有存储的该用户的订单号后六位,那么就不用在存储到搜索库里面了..
-                    if(GuanzhuUserInfo::isTbOrderNum() === false){
-                        //将用户搜索的商品存储到库里面
-                        $this->saveUserSearchInfo($shopId,$this->postObj->FromUserName);
-                    }
 
 
                     //卡片.
@@ -306,6 +309,7 @@ class Index extends Controller
         $usersearchInfo->itemid = $ItemId;
         $usersearchInfo->tk_pid = $givePidToItemId;
         $usersearchInfo->save();
+        return $givePidToItemId;
 
     }
 

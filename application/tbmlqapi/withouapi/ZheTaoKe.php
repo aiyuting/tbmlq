@@ -22,8 +22,12 @@ class ZheTaoKe extends Controller
     /**
      * 高拥转链api 商品id
      */
-    public function gaoyongApiShopId($shopId)
+    public function gaoyongApiShopId($shopId,$givePidToItemId)
     {
+        if(!empty($givePidToItemId)){
+            $givePidToItemId = 'mm_130728145_634850168_'.$givePidToItemId;
+            $this->pid = $givePidToItemId;
+        }
         $url = $this->apiUrl."open_gaoyongzhuanlian.ashx?appkey={$this->appkey}&sid={$this->sid}&pid={$this->pid}&num_iid={$shopId}&signurl=1";
         $result = json_decode(Curl::send($url,'','get'),true);
         $result = json_decode(Curl::send($result['url'],'','get'),true);
