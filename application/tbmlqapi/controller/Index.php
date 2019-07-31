@@ -360,6 +360,9 @@ class Index extends Controller
 
     public function setTikuan($type,$value)
     {
+        if(empty($value)){
+            return $content = Config::get('message.otherMessage');
+        }
         $content = '抱歉,没有所谓的命令。';
         $nowUserInfo = GuanzhuUserInfo::getInfoForOpenId();
         if($type == 'zfb'){
