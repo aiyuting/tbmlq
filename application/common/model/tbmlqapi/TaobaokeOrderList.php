@@ -56,7 +56,7 @@ class TaobaokeOrderList extends Model
      * @param $pid 推广位id
      * @param $orderNum 订单号
      * @param $itemId 商品id
-     * @param $yongjin 自己能拿到的所有佣金.
+     * @param $suoyouyongjin 自己能拿到的所有佣金.
      */
     public static function fukuanchuli($pid,$orderNum,$itemId,$suoyouyongjin)
     {
@@ -104,19 +104,22 @@ class TaobaokeOrderList extends Model
     }
 
     /**
-     *
+     * 付款订单的处理
+     * @param $orderNum 订单号
+     * @param $suoyouyongjin 自己能拿到的所有佣金.
      */
 
-    public function jiesuanchuli($orderNum)
+    public function jiesuanchuli($orderNum,$suoyouyongjin)
     {
+        $yongjing = YonjingJisuan::yongjingjisuan('','',$suoyouyongjin); //计算佣金;
         //取订单号的后六位
         $orderNumHou6wei = substr($orderNum,-6);
         //查询淘宝号对应的用户
         $userinfo = GuanzhuUserInfo::field('dongjie_money,yunxu_money')
             ->where(['tb_order_num'=>$orderNumHou6wei])
             ->find();
-        $userinfo->dongjie_money = 0;
-        $userinfo->yunxu_money = $userinfo['dongjie_money']+$userinfo['yunxu_money'];
+        $userinfo->dongjie_money = $userinfo['dongjie_money'] - $yongjing;
+        $userinfo->yunxu_money = $yongjing;
         $userinfo->save();
     }
 }
