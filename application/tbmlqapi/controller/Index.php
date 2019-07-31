@@ -100,28 +100,7 @@ class Index extends Controller
                 $content = Config::get('message.help');
                 break;
             case 'wdzh':
-                $nowUserInfo = GuanzhuUserInfo::getInfoForOpenId();
-                $nickname = $nowUserInfo['nickname'];
-                $tk_name = $nowUserInfo['tk_name'] ?? '未设置';
-                $tk_zfb = $nowUserInfo['tk_zfb'] ?? '未设置';
-                $tk_wx = $nowUserInfo['tk_wx'] ?? '未设置';
-                $dongjie_money = $nowUserInfo['dongjie_money'];
-                $yunxu_money = $nowUserInfo['yunxu_money'];
-                $content = "━ [玫瑰]个 人 信 息[玫瑰] ━ 
-[微笑]我的昵称：{$nickname}
-[拥抱]账户级别：普通会员
-[微笑]我的姓名：{$tk_name}
-[微笑]支付宝号：{$tk_zfb}
-[微笑]我的微信：{$tk_wx}
-[爱情]我的师傅：无邀请人
-[强]冻结余额(确认收货即可提现)：{$dongjie_money}元
-[胜利]可提现金额：{$yunxu_money}元
-[疑问]更多命令请发送“帮助”查看
-- - - - - - - - - -
-[微笑]修改姓名： 姓名 XX
-[微笑]修改微信： 微信 XX
-[微笑]改支付宝： 支付宝 XX
-[拥抱]资料可等提现的时候再设置";
+                $content = $this->wodezhanghu();
                 break;
             default:
                 $content = '联系开发者,此处未完成';
@@ -151,6 +130,18 @@ class Index extends Controller
                 break;
             case '帮助':
                 $content = Config::get('message.help');
+                break;
+            case strpos($text,'支付宝'):
+                $newText=str_replace('支付宝','',$text);
+                $content = $this->setTikuan('zfb',$newText);
+                break;
+            case strpos($text,'微信'):
+                $newText=str_replace('微信','',$text);
+                $content = $this->setTikuan('wx',$newText);
+                break;
+            case strpos($text,'姓名'):
+                $newText=str_replace('姓名','',$text);
+                $content = $this->setTikuan('xm',$newText);
                 break;
             default:
                 $zhetaoke = new ZheTaoKe();
@@ -333,6 +324,76 @@ class Index extends Controller
         $usersearchInfo->save();
         return $givePidToItemId;
 
+    }
+
+
+    /**
+     * 我的账户
+     */
+
+    public function wodezhanghu()
+    {
+        $nowUserInfo = GuanzhuUserInfo::getInfoForOpenId();
+        $nickname = $nowUserInfo['nickname'];
+        $tk_name = $nowUserInfo['tk_name'] ?? '未设置';
+        $tk_zfb = $nowUserInfo['tk_zfb'] ?? '未设置';
+        $tk_wx = $nowUserInfo['tk_wx'] ?? '未设置';
+        $dongjie_money = $nowUserInfo['dongjie_money'];
+        $yunxu_money = $nowUserInfo['yunxu_money'];
+        $content = "━ [玫瑰]个 人 信 息[玫瑰] ━ 
+[微笑]我的昵称：{$nickname}
+[拥抱]账户级别：普通会员
+[微笑]我的姓名：{$tk_name}
+[微笑]支付宝号：{$tk_zfb}
+[微笑]我的微信：{$tk_wx}
+[爱情]我的师傅：无邀请人
+[强]冻结余额(确认收货即可提现)：{$dongjie_money}元
+[胜利]可提现金额：{$yunxu_money}元
+[疑问]更多命令请发送“帮助”查看
+- - - - - - - - - -
+[微笑]修改姓名： 姓名 XX
+[微笑]修改微信： 微信 XX
+[微笑]改支付宝： 支付宝 XX
+[拥抱]资料可等提现的时候再设置";
+        return $content;
+    }
+
+    public function setTikuan($type,$value)
+    {
+        $content = '抱歉,没有所谓的命令。';
+        $nowUserInfo = GuanzhuUserInfo::getInfoForOpenId();
+        if($type == 'zfb'){
+            if(!isEmail($value) && !isPhoneNum($value)){
+                $content = Config::get('message.zfbnook');
+            }else{
+                $nowUserInfo->tk_zfb = $value;
+                $saveResult = $nowUserInfo->save();
+                if(!$saveResult){
+                    $content = '修改失败,联系管理员qq:854854321';
+                }else{
+                    $content = Config::get('message.zfbok').$value;
+                }
+
+            }
+        }else if($type == 'wx'){
+            $nowUserInfo->tk_wx = $value;
+            $saveResult = $nowUserInfo->save();
+            if(!$saveResult){
+                $content = '修改失败,联系管理员qq:854854321';
+            }else{
+                $content = Config::get('message.wxok').$value;
+            }
+        }else if($type == 'xm'){
+            $nowUserInfo->tk_name = $value;
+            $saveResult = $nowUserInfo->save();
+            if(!$saveResult){
+                $content = '修改失败,联系管理员qq:854854321';
+            }else{
+                $content = Config::get('message.xmok').$value;
+            }
+        }
+
+        return $content;
     }
 
 }

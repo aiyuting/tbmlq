@@ -10,3 +10,23 @@
 // +----------------------------------------------------------------------
 
 // 应用公共文件
+//判断是否是正确的邮箱格式;
+function isEmail($email){
+    $mode = '/\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*/';
+    if(preg_match($mode,$email)){
+        return true;
+    }
+    else{
+        return false;
+    }
+}
+
+function isPhoneNum($phonenumber)
+{
+    if(preg_match("/^1[34578]{1}\d{9}$/",$phonenumber)){
+        return true;
+    }
+    else{
+        return false;
+    }
+}
