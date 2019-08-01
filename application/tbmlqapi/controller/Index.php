@@ -2,6 +2,7 @@
 namespace app\tbmlqapi\controller;
 
 use app\common\model\tbmlqapi\GuanzhuUserInfo;
+use app\common\model\tbmlqapi\TixianList;
 use app\common\model\tbmlqapi\UserSearchInfo;
 use app\tbmlqapi\tool\ArrayToXml;
 use app\tbmlqapi\tool\Curl;
@@ -142,6 +143,10 @@ class Index extends Controller
             case strpos($text,'姓名'):
                 $newText=str_replace('姓名','',$text);
                 $content = $this->setTikuan('xm',$newText);
+                break;
+            case strpos($text,'提现'):
+                $newText=str_replace('提现','',$text);
+                $content = $this->tiXian('xm',$newText);
                 break;
             default:
                 $zhetaoke = new ZheTaoKe();
@@ -358,6 +363,12 @@ class Index extends Controller
         return $content;
     }
 
+    /**
+     * 设置提款信息
+     * @param $type 设置的类型(zfb wx xm等)
+     * @param $value 设置的值。
+     * @return mixed|string
+     */
     public function setTikuan($type,$value)
     {
         if(empty($value)){
@@ -394,6 +405,45 @@ class Index extends Controller
             }else{
                 $content = Config::get('message.xmok').$value;
             }
+        }
+
+        return $content;
+    }
+
+    public function tiXian($value)
+    {
+        $content = '抱歉,没有所谓的命令。';
+
+        /********判断用户输入的金额开始**********/
+        if(!is_numeric($value)){
+            $content = Config::get('message.txbhf');
+        }
+        if($value < 10){
+            $content = Config::get('message.txzdje').'10元';
+        }
+        if($value % 10 != 0){
+            $content = Config::get('message.txdbs');
+        }
+        /********判断用户输入的金额结束**********/
+        $nowUserInfo = GuanzhuUserInfo::getInfoForOpenId();
+        //检查用户的余额是否大于用户输入的提现金额.
+        if($nowUserInfo['yunxu_money'] < $value){
+            $content = "[微笑]您的余额不足{$value}元
+[奋斗]当前余额：{$nowUserInfo['yunxu_money']}元";
+        }
+
+        $nowUserInfo->yunxu_money = $nowUserInfo['yunxu_money'] - $value;
+        $tixianMoney = $nowUserInfo->save();
+        if(!$tixianMoney){
+           $content = "提现失败,出现严重错误.联系开发者.";
+        }
+        $tixianList = new TixianList();
+        $tixianList->openid = session('wxuserinfo')->FromUserName;
+        $tixianList->money = $value;
+        $tixianList->create_time = date('Y-m-d H:i:s');
+        $tixianListSaveResult = $tixianList->save();
+        if($tixianListSaveResult){
+            $content = "[笑脸]恭喜您,提现成功。二十四小时不到账,联系Qq:854854321 或wx: awq6667";
         }
 
         return $content;
