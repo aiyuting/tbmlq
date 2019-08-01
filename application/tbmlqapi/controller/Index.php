@@ -146,7 +146,7 @@ class Index extends Controller
                 break;
             case strpos($text,'提现'):
                 $newText=str_replace('提现','',$text);
-                $content = $this->tiXian('xm',$newText);
+                $content = $this->tiXian($newText);
                 break;
             default:
                 $zhetaoke = new ZheTaoKe();
@@ -415,27 +415,30 @@ class Index extends Controller
         $content = '抱歉,没有所谓的命令。';
 
         /********判断用户输入的金额开始**********/
+        if(empty($value)){
+            return Config::get('message.txhelp');
+        }
         if(!is_numeric($value)){
-            $content = Config::get('message.txbhf');
+            return Config::get('message.txbhf');
         }
         if($value < 10){
-            $content = Config::get('message.txzdje').'10元';
+            return Config::get('message.txzdje').'10元';
         }
         if($value % 10 != 0){
-            $content = Config::get('message.txdbs');
+            return Config::get('message.txdbs');
         }
         /********判断用户输入的金额结束**********/
         $nowUserInfo = GuanzhuUserInfo::getInfoForOpenId();
         //检查用户的余额是否大于用户输入的提现金额.
         if($nowUserInfo['yunxu_money'] < $value){
-            $content = "[微笑]您的余额不足{$value}元
+            return "[微笑]您的余额不足{$value}元
 [奋斗]当前余额：{$nowUserInfo['yunxu_money']}元";
         }
 
         $nowUserInfo->yunxu_money = $nowUserInfo['yunxu_money'] - $value;
         $tixianMoney = $nowUserInfo->save();
         if(!$tixianMoney){
-           $content = "提现失败,出现严重错误.联系开发者.";
+            return "提现失败,出现严重错误.联系开发者.";
         }
         $tixianList = new TixianList();
         $tixianList->openid = session('wxuserinfo')->FromUserName;
