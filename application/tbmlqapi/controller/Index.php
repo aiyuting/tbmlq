@@ -103,6 +103,9 @@ class Index extends Controller
             case 'wdzh':
                 $content = $this->wodezhanghu();
                 break;
+            case 'sqtx':
+                $content = Config::get('message.txhelp');
+                break;
             default:
                 $content = '联系开发者,此处未完成';
                 break;
@@ -308,7 +311,7 @@ class Index extends Controller
         //如果该用户以及他搜索的商品id已经存储到库里面了。那么就不存储了
         $userAndIeemrResult = UserSearchInfo::findUserAndItemId($ItemId,$FromUserName);
         if(!empty($userAndIeemrResult)){
-            return false;
+            return '';
         }
 
         //查询出这个商品id已经拿到的pid 那么分配pid的时候去除此pid
