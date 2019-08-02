@@ -249,7 +249,7 @@ class Index extends Controller
         if(!empty($this->postObj->EventKey)){
             $openid = explode('_',$this->postObj->EventKey)[1];
             //上级用户的id
-            $sjUserId = GuanzhuUserInfo::getInfoForOpenId($openid,'id');
+            $sjUserId = GuanzhuUserInfo::getInfoForOpenId($openid,'id')['id'];
         }
         /****************结束**************/
 

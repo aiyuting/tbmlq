@@ -44,10 +44,10 @@ class GuanzhuUserInfo extends Model
     public static function getInfoForOpenId($openid = '',$field = '*')
     {
         if(empty($openid)){
-            $openId = session('wxuserinfo')->FromUserName;
+            $openid = session('wxuserinfo')->FromUserName;
         }
         $result = self::field($field)
-            ->where(['openid'=>$openId])
+            ->where(['openid'=>$openid])
             ->find();
         return $result;
     }
