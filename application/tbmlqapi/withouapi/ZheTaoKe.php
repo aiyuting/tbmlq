@@ -41,8 +41,8 @@ class ZheTaoKe extends Controller
             $givePidToItemId = $this->pidPrefix.$givePidToItemId;
             $this->pid = $givePidToItemId;
         }else{
-            //此处用固定的pid来进行 佣金分流, 以防被封.
-            $fixedPidArr = Config::get('tkpid')['fixedPid'];
+            //此处用固定的pid来进行 佣金分流, 以防被封一整条线.
+            $fixedPidArr = Config::get('tkpid.fixedPid');
             $fixedPidNum = count($fixedPidArr);
             $fixedPid = rand(0,$fixedPidNum-1);
             $this->pid = $this->pidPrefix.$fixedPidArr[$fixedPid];
