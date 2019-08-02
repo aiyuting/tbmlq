@@ -51,4 +51,22 @@ class GuanzhuUserInfo extends Model
             ->find();
         return $result;
     }
+
+    /**
+     * 根据用户id查询对应的下级
+     */
+    public static function getXiaJiArr($userid)
+    {
+        $str = '';
+        $result = self::field('nickname')
+            ->where(['sj_id'=>$userid])
+            ->select();
+        if(empty($result)){
+            return '';
+        }
+        foreach ($result as $k => $v) {
+            $str .= $v['nickname'].'\r\n';
+        }
+        return $str;
+    }
 }

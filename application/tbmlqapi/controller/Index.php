@@ -108,6 +108,16 @@ class Index extends Controller
             case 'sqtx':
                 $content = Config::get('message.txhelp');
                 break;
+            case 'wdtg':
+                //查出当前人的id
+                $nowUserId = GuanzhuUserInfo::getInfoForOpenId($this->postObj->FromUserName,'id')['id'];
+                $xiajiUserStr = GuanzhuUserInfo::getXiaJiArr($nowUserId);
+                if(empty($xiajiUserStr)){
+                    $content = '您还没有推广过哦~';
+                }else{
+                    $content = $xiajiUserStr;
+                }
+                break;
             case 'qrcode':
                 //此处先临时输出 url. 之后在改.
                 $qrCodeInfo = Wx::getParQrcode($this->postObj->FromUserName);
