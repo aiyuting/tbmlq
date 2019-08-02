@@ -11,10 +11,10 @@ use think\Controller;
  */
 class ReposeText extends Controller
 {
-    public static function reposeText($postObj,$content)
+    public static function reposeText($content)
     {
-        $toUser 	=  $postObj->FromUserName;
-        $fromUser 	=  $postObj->ToUserName;
+        $toUser 	=  session('wxuserinfo')->FromUserName;
+        $fromUser 	=  session('wxuserinfo')->ToUserName;
         $time 		=  time();
         $msgType 	=  'text';
         $tmplateArr = [

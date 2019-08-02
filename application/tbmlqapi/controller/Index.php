@@ -2,6 +2,7 @@
 namespace app\tbmlqapi\controller;
 
 use app\common\model\tbmlqapi\GuanzhuUserInfo;
+use app\common\model\tbmlqapi\SysConfig;
 use app\common\model\tbmlqapi\TixianList;
 use app\common\model\tbmlqapi\UserSearchInfo;
 use app\tbmlqapi\tool\ArrayToXml;
@@ -58,6 +59,17 @@ class Index extends Controller
         //将当前的数据存储到session里面
         session('wxuserinfo',$postObj);
         $this->postObj = $postObj;
+
+        //获取当前系统的设置.存储到session里面
+        $sysConfig = SysConfig::find();
+        if(empty($sysConfig)){
+            ReposeText::reposeText('请管理员配置系统后在进行使用.');
+        }else{
+            session('sysConfig',$sysConfig);
+        }
+
+
+
         //获取msgType
         $msgType = strtolower( $postObj->MsgType );
         switch ($msgType)
@@ -111,7 +123,7 @@ class Index extends Controller
                 break;
         }
 
-        ReposeText::reposeText($this->postObj,$content);
+        ReposeText::reposeText($content);
     }
 
 
@@ -169,7 +181,7 @@ class Index extends Controller
                     //调取转链api
                     $gaoyongInfo = $zhetaoke->gaoyongApiShopId($shopId,$givePidToItemId);
                     if(empty($gaoyongInfo)){
-                        ReposeText::reposeText($this->postObj,'此物品没优惠券');
+                        ReposeText::reposeText('此物品没优惠券');
                         exit;
                     }
                     //如果有优惠券,那么就走二合一链接
@@ -228,7 +240,7 @@ class Index extends Controller
                 }
                 break;
         }
-        ReposeText::reposeText($this->postObj,$content);
+        ReposeText::reposeText($content);
     }
 
     /**
@@ -292,7 +304,7 @@ class Index extends Controller
 
         /***************结束************/
         $content   =  Config::get('message.gzgzh');
-        ReposeText::reposeText($this->postObj,$content);
+        ReposeText::reposeText($content);
     }
     /**
      * 取消关注公众号的事件
@@ -320,7 +332,7 @@ class Index extends Controller
         //取出可以分配的pid
         $newPidArr = array_values(array_diff($allPidArr,$pidArr));
         if(empty($newPidArr)){
-            ReposeText::reposeText($this->postObj,'抱歉,无可分配的pid,请联系管理员qq:854854321');
+            ReposeText::reposeText('抱歉,无可分配的pid,请联系管理员qq:854854321');
         }
 
         //取第一个pid给这个商品的pid

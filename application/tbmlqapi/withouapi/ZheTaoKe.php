@@ -2,6 +2,7 @@
 namespace app\tbmlqapi\withouapi;
 
 use app\tbmlqapi\tool\Curl;
+use think\App;
 use think\Controller;
 
 /**
@@ -12,20 +13,31 @@ use think\Controller;
 class ZheTaoKe extends Controller
 {
     //折淘客的对接秘钥appkey
-    private $appkey = "2bf9a3d2e35e452e883edb0ba15d251e";
+    private $appkey;
     //对应的淘客账号授权ID
-    private $sid = 20148;
-    //对应的淘客账号pid
-    private $pid = 'mm_130728145_634850168_109199600246';
+    private $sid;
+    //对应的淘客账号pid前缀.
+    private $pidPrefix;
+    //对应的淘客账号pid.
+    private $pid;
     //api路径
     private $apiUrl = 'https://api.zhetaoke.com:10001/api/';
+
+    public function __construct(App $app = null)
+    {
+        parent::__construct($app);
+        $this->appkey = session('sysConfig')['ztk_appkey'];
+        $this->sid = session('sysConfig')['ztk_sid'];
+        $this->pidPrefix = session('sysConfig')['user_tblm_pid'];
+    }
+
     /**
      * 高拥转链api 商品id
      */
     public function gaoyongApiShopId($shopId,$givePidToItemId)
     {
         if(!empty($givePidToItemId)){
-            $givePidToItemId = 'mm_130728145_634850168_'.$givePidToItemId;
+            $givePidToItemId = $this->pidPrefix.$givePidToItemId;
             $this->pid = $givePidToItemId;
         }
         $url = $this->apiUrl."open_gaoyongzhuanlian.ashx?appkey={$this->appkey}&sid={$this->sid}&pid={$this->pid}&num_iid={$shopId}&signurl=1";
