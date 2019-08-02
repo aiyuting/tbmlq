@@ -4,6 +4,7 @@ namespace app\tbmlqapi\withouapi;
 use app\tbmlqapi\tool\Curl;
 use think\App;
 use think\Controller;
+use think\facade\Config;
 
 /**
  * 折淘客的api http://www.zhetaoke.com
@@ -39,6 +40,12 @@ class ZheTaoKe extends Controller
         if(!empty($givePidToItemId)){
             $givePidToItemId = $this->pidPrefix.$givePidToItemId;
             $this->pid = $givePidToItemId;
+        }else{
+            //此处用固定的pid来进行 佣金分流, 以防被封.
+            $fixedPidArr = Config::get('tkpid')['fixedPid'];
+            $fixedPidNum = count($fixedPidArr);
+            $fixedPid = rand(0,$fixedPidNum-1);
+            $this->pid = $this->pidPrefix.$fixedPidArr[$fixedPid];
         }
         $url = $this->apiUrl."open_gaoyongzhuanlian.ashx?appkey={$this->appkey}&sid={$this->sid}&pid={$this->pid}&num_iid={$shopId}&signurl=1";
         $result = json_decode(Curl::send($url,'','get'),true);
