@@ -57,16 +57,9 @@ class GuanzhuUserInfo extends Model
      */
     public static function getXiaJiArr($userid)
     {
-        $str = '';
         $result = self::field('nickname')
             ->where(['sj_id'=>$userid])
-            ->select();
-        if(empty($result)){
-            return '';
-        }
-        foreach ($result as $k => $v) {
-            $str .= $v['nickname'].'\r\n';
-        }
-        return $str;
+            ->count();
+        return $result;
     }
 }

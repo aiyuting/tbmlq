@@ -111,12 +111,8 @@ class Index extends Controller
             case 'wdtg':
                 //查出当前人的id
                 $nowUserId = GuanzhuUserInfo::getInfoForOpenId($this->postObj->FromUserName,'id')['id'];
-                $xiajiUserStr = GuanzhuUserInfo::getXiaJiArr($nowUserId);
-                if(empty($xiajiUserStr)){
-                    $content = '您还没有推广过哦~';
-                }else{
-                    $content = $xiajiUserStr;
-                }
+                $xiajiUserCount = GuanzhuUserInfo::getXiaJiArr($nowUserId);
+                $content = "您成功推广了{$xiajiUserCount}人";
                 break;
             case 'qrcode':
                 //此处先临时输出 url. 之后在改.
