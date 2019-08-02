@@ -26,7 +26,7 @@ class YonjingJisuan extends Controller
             $yongjin = round($quanhoujia * $bili * 0.9 / 100,2);//商品的全部佣金.(保留两位);
         }
 
-        $yongjin = $yongjin * $sysYongjingBl;
+        $yongjin = round($yongjin * $sysYongjingBl,2);
         return $yongjin;
     }
 }
