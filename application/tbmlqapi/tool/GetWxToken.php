@@ -11,8 +11,8 @@ class GetWxToken extends Controller
         if(!empty(session('access_token'))){
             $data = session('access_token');
         }else{
-            $appId = session('sysConfig')['wx_appid'];
-            $appSecret = session('sysConfig')['wx_appsecret'];
+            $appId = GetSysConfig::sysConfig()['wx_appid'];
+            $appSecret = GetSysConfig::sysConfig()['wx_appsecret'];
             $url = "https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid=".$appId."&secret=".$appSecret;
             $data = json_decode(Curl::send($url,'','get'))->access_token;
             session('access_token',$data);

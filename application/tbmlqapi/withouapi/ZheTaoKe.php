@@ -2,6 +2,7 @@
 namespace app\tbmlqapi\withouapi;
 
 use app\tbmlqapi\tool\Curl;
+use app\tbmlqapi\tool\GetSysConfig;
 use think\App;
 use think\Controller;
 use think\facade\Config;
@@ -27,9 +28,9 @@ class ZheTaoKe extends Controller
     public function __construct(App $app = null)
     {
         parent::__construct($app);
-        $this->appkey = session('sysConfig')['ztk_appkey'];
-        $this->sid = session('sysConfig')['ztk_sid'];
-        $this->pidPrefix = session('sysConfig')['user_tblm_pid'];
+        $this->appkey = GetSysConfig::sysConfig()['ztk_appkey'];
+        $this->sid = GetSysConfig::sysConfig()['ztk_sid'];
+        $this->pidPrefix = GetSysConfig::sysConfig()['user_tblm_pid'];
     }
 
     /**

@@ -60,16 +60,6 @@ class Index extends Controller
         session('wxuserinfo',$postObj);
         $this->postObj = $postObj;
 
-        //获取当前系统的设置.存储到session里面
-        $sysConfig = SysConfig::find();
-        if(empty($sysConfig)){
-            ReposeText::reposeText('请管理员配置系统后在进行使用.');
-        }else{
-            session('sysConfig',$sysConfig);
-        }
-
-
-
         //获取msgType
         $msgType = strtolower( $postObj->MsgType );
         switch ($msgType)

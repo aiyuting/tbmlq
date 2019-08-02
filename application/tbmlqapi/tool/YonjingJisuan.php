@@ -19,7 +19,7 @@ class YonjingJisuan extends Controller
     public static function yongjingjisuan($quanhoujia,$bili,$suoyouyongjin='')
     {
         //如果没设置佣金比例 那么就默认9成
-        $sysYongjingBl = session('sysConfig')['yj_bl'] / 100 ?? 0.9;
+        $sysYongjingBl = GetSysConfig::sysConfig()['yj_bl'] / 100 ?? 0.9;
         if(!empty($suoyouyongjin)){
             $yongjin = round($suoyouyongjin * 0.9,2);//商品的全部佣金.(保留两位);
         }else{

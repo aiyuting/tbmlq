@@ -21,6 +21,7 @@ function isEmail($email){
     }
 }
 
+//是否为手机号
 function isPhoneNum($phonenumber)
 {
     if(preg_match("/^1[34578]{1}\d{9}$/",$phonenumber)){
@@ -30,3 +31,4 @@ function isPhoneNum($phonenumber)
         return false;
     }
 }
+
