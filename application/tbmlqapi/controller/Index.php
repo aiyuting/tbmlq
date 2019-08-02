@@ -109,7 +109,10 @@ class Index extends Controller
                 $content = Config::get('message.txhelp');
                 break;
             case 'qrcode':
-                $content = '生成推广二维码';
+                //此处先临时输出 url. 之后在改.
+                $qrCodeInfo = Wx::getParQrcode($this->postObj->FromUserName);
+                $showQrcode = "https://mp.weixin.qq.com/cgi-bin/showqrcode?ticket=".$qrCodeInfo['ticket'];
+                $content = "<a href='{$showQrcode}'>点击此处查看您的推广二维码</a>";
                 break;
             default:
                 $content = '联系开发者,此处未完成';
@@ -242,8 +245,16 @@ class Index extends Controller
 
     public function guanzhuGzh()
     {
-        /***对关注公众号的用户进行入库操作.(详细信息)*****/
+        /***此处判断是否为上级推荐来*****/
+        if(!empty($this->postObj->EventKey)){
+            $openid = explode('_',$this->postObj->EventKey)[1];
+            //上级用户的id
+            $sjUserId = GuanzhuUserInfo::getInfoForOpenId($openid,'id');
+        }
+        /****************结束**************/
 
+
+        /***对关注公众号的用户进行入库操作.(详细信息)*****/
         //获取用户的详细信息
         $wxUserInfo = Wx::getWxUserInfo($this->postObj->FromUserName);
         $this->wxUserInfo = $wxUserInfo;
@@ -253,6 +264,9 @@ class Index extends Controller
         if(empty($nowUserInfo)){
             //入库
             $guanzhuUserInfo = new GuanzhuUserInfo();
+            if(isset($sjUserId)){
+                $guanzhuUserInfo->sj_id = $sjUserId;
+            }
             $guanzhuUserInfo->subscribe = $wxUserInfo['subscribe'] ?? '';
             $guanzhuUserInfo->openid = $wxUserInfo['openid'] ?? '';
             $guanzhuUserInfo->nickname = $wxUserInfo['nickname'] ?? '';

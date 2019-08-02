@@ -34,15 +34,15 @@ class Wx extends Controller
     {
         $access_token = GetWxToken::getWxToken();
         $getParQrcodeUrl = "https://api.weixin.qq.com/cgi-bin/qrcode/create?access_token={$access_token}";
-        $data = [
-            'action_name' => 'QR_LIMIT_SCENE',
-            'action_info' => [
-                'scene' => [
-                    'scene_str' => $openId
-                ]
-            ]
-        ];
-        $result = json_decode(Curl::send($getParQrcodeUrl,json_encode($data),'post'),true);
+        $data = "{
+                \"action_name\": \"QR_LIMIT_STR_SCENE\", 
+                \"action_info\": {
+                    \"scene\": {
+                        \"scene_str\": \"{$openId}\"
+                    }
+                }
+            }";
+        $result = json_decode(Curl::send($getParQrcodeUrl,$data,'post'),true);
         return $result;
     }
 }

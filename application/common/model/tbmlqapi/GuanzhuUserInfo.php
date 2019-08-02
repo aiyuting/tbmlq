@@ -41,10 +41,13 @@ class GuanzhuUserInfo extends Model
     /**
      * 根据用户openid获取他的详细信息.
      */
-    public static function getInfoForOpenId()
+    public static function getInfoForOpenId($openid = '',$field = '*')
     {
-        $openId = session('wxuserinfo')->FromUserName;
-        $result = self::where(['openid'=>$openId])
+        if(empty($openid)){
+            $openId = session('wxuserinfo')->FromUserName;
+        }
+        $result = self::field($field)
+            ->where(['openid'=>$openId])
             ->find();
         return $result;
     }
