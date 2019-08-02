@@ -50,8 +50,8 @@ class WxMenu extends Controller
                     'sub_button' => [
                         [
                             "type"=>"click",
-                            "name"=>"会员影视",
-                            "key"=>"movie"
+                            "name"=>"生成推广海报",
+                            "key"=>"qrcode"
                         ],
                         [
                             "type"=>"click",

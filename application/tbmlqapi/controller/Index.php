@@ -108,6 +108,9 @@ class Index extends Controller
             case 'sqtx':
                 $content = Config::get('message.txhelp');
                 break;
+            case 'qrcode':
+                $content = '生成推广二维码';
+                break;
             default:
                 $content = '联系开发者,此处未完成';
                 break;
