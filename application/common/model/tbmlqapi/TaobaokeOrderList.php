@@ -1,6 +1,7 @@
 <?php
 namespace app\common\model\tbmlqapi;
 
+use app\tbmlqapi\tool\UserMoney;
 use app\tbmlqapi\tool\YonjingJisuan;
 use think\Model;
 
@@ -115,11 +116,8 @@ class TaobaokeOrderList extends Model
         //取订单号的后六位
         $orderNumHou6wei = substr($orderNum,-6);
         //查询淘宝号对应的用户
-        $userinfo = GuanzhuUserInfo::field('dongjie_money,yunxu_money')
-            ->where(['tb_order_num'=>$orderNumHou6wei])
-            ->find();
-        $userinfo->dongjie_money = $userinfo['dongjie_money'] - $yongjing;
-        $userinfo->yunxu_money = $yongjing;
-        $userinfo->save();
+        $userId = GuanzhuUserInfo::where(['tb_order_num'=>$orderNumHou6wei])
+            ->value('id');
+        UserMoney::userMoney($userId,$yongjing,'订单结算',1,true);
     }
 }

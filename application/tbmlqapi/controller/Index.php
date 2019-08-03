@@ -8,6 +8,7 @@ use app\common\model\tbmlqapi\UserSearchInfo;
 use app\tbmlqapi\tool\ArrayToXml;
 use app\tbmlqapi\tool\Curl;
 use app\tbmlqapi\tool\ReposeText;
+use app\tbmlqapi\tool\UserMoney;
 use app\tbmlqapi\tool\YonjingJisuan;
 use app\tbmlqapi\withouapi\Wx;
 use app\tbmlqapi\withouapi\ZheTaoKe;
@@ -456,15 +457,13 @@ class Index extends Controller
             return Config::get('message.txdbs');
         }
         /********判断用户输入的金额结束**********/
-        $nowUserInfo = GuanzhuUserInfo::getInfoForOpenId();
+        $nowUserInfo = GuanzhuUserInfo::getInfoForOpenId('','id,yunxu_money');
         //检查用户的余额是否大于用户输入的提现金额.
         if($nowUserInfo['yunxu_money'] < $value){
             return "[微笑]您的余额不足{$value}元
 [奋斗]当前余额：{$nowUserInfo['yunxu_money']}元";
         }
-
-        $nowUserInfo->yunxu_money = $nowUserInfo['yunxu_money'] - $value;
-        $tixianMoney = $nowUserInfo->save();
+        $tixianMoney = UserMoney::userMoney($nowUserInfo['id'],$value,'提现',2);
         if(!$tixianMoney){
             return "提现失败,出现严重错误.联系开发者.";
         }
