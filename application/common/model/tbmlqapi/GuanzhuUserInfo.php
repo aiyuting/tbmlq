@@ -80,7 +80,10 @@ class GuanzhuUserInfo extends Model
         }
         if(!empty($orderStr)){
             $orderStr = rtrim($orderStr,',');
+        }else{
+            return 0;
         }
+
         $result = TaobaokeOrderList::where('','exp',"substring(trade_id,-6) IN ({$orderStr})")
             ->where(['tk_status'=>3])
             ->count();
