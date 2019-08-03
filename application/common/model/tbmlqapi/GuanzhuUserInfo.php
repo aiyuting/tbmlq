@@ -53,12 +53,25 @@ class GuanzhuUserInfo extends Model
     }
 
     /**
-     * 根据用户id查询对应的下级
+     * 根据用户id查询对应的下级人数
      */
-    public static function getXiaJiArr($userid)
+    public static function getXiaJiCount($userid)
     {
         $result = self::field('nickname')
             ->where(['sj_id'=>$userid])
+            ->count();
+        return $result;
+    }
+
+    /**
+     * 根据用户id获取到有效下级人数
+     */
+
+    public static function getYouXiaoXiaJiCount($userid)
+    {
+        $tb_order_num = self::where(['sj_id'=>$userid])
+            ->value('tb_order_num');
+        $result = TaobaokeOrderList::where(["substring(trade_id,-6)"=>$tb_order_num])
             ->count();
         return $result;
     }
