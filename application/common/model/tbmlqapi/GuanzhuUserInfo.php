@@ -69,9 +69,20 @@ class GuanzhuUserInfo extends Model
 
     public static function getYouXiaoXiaJiCount($userid)
     {
-        $tb_order_num = self::where(['sj_id'=>$userid])
-            ->value('tb_order_num');
-        $result = TaobaokeOrderList::where(["substring(trade_id,-6)"=>$tb_order_num])
+        $tb_order_num = self::field('tb_order_num')
+            ->where(['sj_id'=>$userid])
+            ->select();
+        $orderStr = '';
+        foreach ($tb_order_num as $k => $v) {
+            if(!empty($v['tb_order_num'])){
+                $orderStr.=$v['tb_order_num'].',';
+            }
+        }
+        if(!empty($orderStr)){
+            $orderStr = rtrim($orderStr,',');
+        }
+        $result = TaobaokeOrderList::where('','exp',"substring(trade_id,-6) IN ({$orderStr})")
+            ->where(['tk_status'=>3])
             ->count();
         return $result;
     }
