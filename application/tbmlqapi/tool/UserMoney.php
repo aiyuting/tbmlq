@@ -35,10 +35,13 @@ class UserMoney extends Controller
             $userinfo->yunxu_money = $userinfo['yunxu_money'] - $money;
         }
 
-        $userinfo->save();
-
+        $moneyResult = $userinfo->save();
+        if(!$moneyResult){
+            return $moneyResult;
+        }
         //写入收支明细日志
-        self::szmxLog($userid,$money,$note,$type);
+        $result = self::szmxLog($userid,$money,$note,$type);
+        return $result;
     }
 
     /**
@@ -53,6 +56,7 @@ class UserMoney extends Controller
         $sxmxLog->money = $money;
         $sxmxLog->type = $type;
         $sxmxLog->create_time = date('Y-m-d H:i:s');
-        $sxmxLog->save();
+        $result = $sxmxLog->save();
+        return $result;
     }
 }
