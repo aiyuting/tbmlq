@@ -117,7 +117,7 @@ class GuanzhuUserInfo extends Model
                 $levelid = $v['id'];
             }
         }
-        if(!empty($levelid)){
+        if(!empty($levelid) && session('userinfo')['user_level'] != $levelid){
             self::where('id',$userid)
             ->update(['user_level'=>$levelid]);
         }
