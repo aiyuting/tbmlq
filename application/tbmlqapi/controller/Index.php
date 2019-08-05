@@ -60,10 +60,14 @@ class Index extends Controller
         //将当前的数据存储到session里面
         session('wxuserinfo',$postObj);
         $this->postObj = $postObj;
+        //将当前用户的所有数据存储到session里面
+        $nowUserInfo = GuanzhuUserInfo::getInfoForOpenId();
+        session('userinfo',$nowUserInfo);
+
 
         //进行判断用户是否满足升级条件.
             //查出当前人的id
-        $nowUserId = GuanzhuUserInfo::getInfoForOpenId($this->postObj->FromUserName,'id')['id'];
+        $nowUserId = session('userinfo')['id'];
         GuanzhuUserInfo::isShengji($nowUserId);
 
         //获取msgType
@@ -116,7 +120,7 @@ class Index extends Controller
                 break;
             case 'wdtg':
                 //查出当前人的id
-                $nowUserId = GuanzhuUserInfo::getInfoForOpenId($this->postObj->FromUserName,'id')['id'];
+                $nowUserId = session('userinfo')['id'];
                 $xiajiUserCount = GuanzhuUserInfo::getXiaJiCount($nowUserId);
                 $youxiaoXiajiUserCount = GuanzhuUserInfo::getYouXiaoXiaJiCount($nowUserId);
                 $content = "您成功推广了{$xiajiUserCount}人,有效人数(完成首次订单):{$youxiaoXiajiUserCount}人";
