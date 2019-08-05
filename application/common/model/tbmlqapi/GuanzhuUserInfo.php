@@ -1,6 +1,7 @@
 <?php
 namespace app\common\model\tbmlqapi;
 
+use app\tbmlqapi\tool\ReposeText;
 use think\Model;
 use think\Url;
 
@@ -113,7 +114,7 @@ class GuanzhuUserInfo extends Model
         $levelid = '';
         foreach ($userlevel as $k => $v){
             if($v['where_num'] == $jibieVal){
-                $levelid = $k;
+                $levelid = $v['id'];
             }
         }
         if(!empty($levelid)){
