@@ -89,4 +89,35 @@ class GuanzhuUserInfo extends Model
             ->count();
         return $result;
     }
+
+    /**
+     * 是否满足升级条件
+     */
+
+    public static function isShengji($userid)
+    {
+        $youxiaoNum = self::getYouXiaoXiaJiCount($userid);
+        $userlevel = UserLevel::field('id,where_num')
+            ->select();
+        $whereNumArr = [];
+        foreach ($userlevel as $k => $v) {
+            $whereNumArr[$k] = $v['where_num'];
+        }
+        array_push($whereNumArr,$youxiaoNum);
+        sort($whereNumArr);
+        //此处获取他对应的key
+        $levelKey = array_search($youxiaoNum,$whereNumArr);
+        //获取对应等级的值
+        $jibieVal = $levelKey[$levelKey-1];
+
+        $levelid = '';
+        foreach ($userlevel as $k => $v){
+            if($v['where_num'] == $jibieVal){
+                $levelid = $k;
+            }
+        }
+        if(!empty($levelid)){
+            self::update(['id'=>$userid],['user_level'=>$levelid]);
+        }
+    }
 }

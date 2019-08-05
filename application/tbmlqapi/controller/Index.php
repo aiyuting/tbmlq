@@ -61,6 +61,11 @@ class Index extends Controller
         session('wxuserinfo',$postObj);
         $this->postObj = $postObj;
 
+        //进行判断用户是否满足升级条件.
+            //查出当前人的id
+        $nowUserId = GuanzhuUserInfo::getInfoForOpenId($this->postObj->FromUserName,'id')['id'];
+        GuanzhuUserInfo::isShengji($nowUserId);
+
         //获取msgType
         $msgType = strtolower( $postObj->MsgType );
         switch ($msgType)
