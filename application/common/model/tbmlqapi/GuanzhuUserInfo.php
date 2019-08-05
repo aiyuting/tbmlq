@@ -97,7 +97,6 @@ class GuanzhuUserInfo extends Model
 
     public static function isShengji($userid)
     {
-        ReposeText::reposeText();
         $youxiaoNum = self::getYouXiaoXiaJiCount($userid);
         $userlevel = UserLevel::field('id,where_num')
             ->select();
