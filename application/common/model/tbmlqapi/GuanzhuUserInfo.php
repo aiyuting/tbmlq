@@ -118,7 +118,8 @@ class GuanzhuUserInfo extends Model
             }
         }
         if(!empty($levelid)){
-            self::update(['id'=>$userid],['user_level'=>$levelid]);
+            self::where('id',$userlevel)
+            ->update(['user_level'=>$levelid]);
         }
     }
 }
