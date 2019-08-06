@@ -119,5 +119,24 @@ class TaobaokeOrderList extends Model
         $userId = GuanzhuUserInfo::where(['tb_order_num'=>$orderNumHou6wei])
             ->value('id');
         UserMoney::userMoney($userId,$yongjing,'订单结算',1,true);
+
+
+
+
+        /*********进行三级分销处理***********/
+        $one_user = GuanzhuUserInfo::getSupId($userId);
+        //如果不为空的话代表有上级,
+        if(!empty($one_user['sj_id'])){
+            //如果有上级 那么给上级加钱.
+            $one_yongjin = $suoyouyongjin * $one_user['one_bili'] / 100;
+            UserMoney::userMoney($one_user['sj_id'],$one_yongjin,'下级返利',1,false);
+            $two_user = GuanzhuUserInfo::getSupId($one_user['sj_id']);
+            //如果不为空的话代表有上上级
+            if(!empty($two_user)){
+                $two_yongjin = $suoyouyongjin * $two_user['two_bili'] / 100;
+                UserMoney::userMoney($two_user['sj_id'],$two_yongjin,'下下级返利',1,false);
+            }
+        }
+        /***************结束***************/
     }
 }

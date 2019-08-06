@@ -12,6 +12,17 @@ use think\Url;
  */
 class GuanzhuUserInfo extends Model
 {
+
+    public function userLevel()
+    {
+        return $this->hasOne('UserLevel','id','user_level')->bind([
+            'one_bili' => 'one_bili',
+            'two_bili' => 'two_bili',
+        ]);
+    }
+
+
+
     /**
      * 取消关注.(取消关注的时候调用, 其他不可调用.)
      */
@@ -121,5 +132,17 @@ class GuanzhuUserInfo extends Model
             self::where('id',$userid)
             ->update(['user_level'=>$levelid]);
         }
+    }
+
+    /**
+     * 根据userid 查找上级id
+     */
+    public static function getSupId($userid)
+    {
+        $result = self::where(['id'=>$userid])
+            ->field('sj_id,user_level')
+            ->with('userLevel')
+            ->find();
+        return $result;
     }
 }
