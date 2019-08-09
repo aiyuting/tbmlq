@@ -132,7 +132,7 @@ class TaobaokeOrderList extends Model
             UserMoney::userMoney($one_user['sj_id'],$one_yongjin,'下级返利',1,false);
             $two_user = GuanzhuUserInfo::getSupId($one_user['sj_id']);
             //如果不为空的话代表有上上级
-            if(!empty($two_user)){
+            if(!empty($two_user['sj_id'])){
                 $two_yongjin = $suoyouyongjin * $two_user['two_bili'] / 100;
                 UserMoney::userMoney($two_user['sj_id'],$two_yongjin,'下下级返利',1,false);
             }
