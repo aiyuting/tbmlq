@@ -110,7 +110,7 @@ class TaobaokeOrderList extends Model
      * @param $suoyouyongjin 自己能拿到的所有佣金.
      */
 
-    public function jiesuanchuli($orderNum,$suoyouyongjin)
+    public static function jiesuanchuli($orderNum,$suoyouyongjin)
     {
         $yongjing = YonjingJisuan::yongjingjisuan('','',$suoyouyongjin); //计算佣金;
         //取订单号的后六位
