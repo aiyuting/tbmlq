@@ -4,6 +4,7 @@ namespace app\tbmlqapi\controller;
 use app\common\model\tbmlqapi\GuanzhuUserInfo;
 use app\common\model\tbmlqapi\SysConfig;
 use app\common\model\tbmlqapi\TixianList;
+use app\common\model\tbmlqapi\UserLevel;
 use app\common\model\tbmlqapi\UserSearchInfo;
 use app\tbmlqapi\tool\ArrayToXml;
 use app\tbmlqapi\tool\Curl;
@@ -12,6 +13,7 @@ use app\tbmlqapi\tool\UserMoney;
 use app\tbmlqapi\tool\YonjingJisuan;
 use app\tbmlqapi\withouapi\Wx;
 use app\tbmlqapi\withouapi\ZheTaoKe;
+use http\Client\Curl\User;
 use think\Controller;
 use think\facade\Config;
 
@@ -378,6 +380,11 @@ class Index extends Controller
     public function wodezhanghu()
     {
         $nowUserInfo = GuanzhuUserInfo::getInfoForOpenId();
+        if(!empty($nowUserInfo['sj_id'])){
+            $sj_name = GuanzhuUserInfo::getInfoForId($nowUserInfo['sj_id'],'nickname')['nickname'];
+        }
+        $level_name = UserLevel::getInfoForId($nowUserInfo['user_level'],'name')['name'];
+        $sj_name = $sj_name ?? '无邀请人';
         $nickname = $nowUserInfo['nickname'];
         $tk_name = $nowUserInfo['tk_name'] ?? '未设置';
         $tk_zfb = $nowUserInfo['tk_zfb'] ?? '未设置';
@@ -386,11 +393,11 @@ class Index extends Controller
         $yunxu_money = $nowUserInfo['yunxu_money'];
         $content = "━ [玫瑰]个 人 信 息[玫瑰] ━ 
 [微笑]我的昵称：{$nickname}
-[拥抱]账户级别：普通会员
+[拥抱]账户级别：{$level_name}
 [微笑]我的姓名：{$tk_name}
 [微笑]支付宝号：{$tk_zfb}
 [微笑]我的微信：{$tk_wx}
-[爱情]我的师傅：无邀请人
+[爱情]我的师傅：{$sj_name}
 [强]冻结余额(确认收货即可提现)：{$dongjie_money}元
 [胜利]可提现金额：{$yunxu_money}元
 [疑问]更多命令请发送“帮助”查看

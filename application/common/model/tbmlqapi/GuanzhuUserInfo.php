@@ -63,6 +63,19 @@ class GuanzhuUserInfo extends Model
             ->find();
         return $result;
     }
+    /**
+     * 根据用户id获取他的详细信息.
+     */
+    public static function getInfoForId($id = '',$field = '*')
+    {
+        if(empty($id)){
+            ReposeText::reposeText('getInfoForId方法的openid不能为空');
+        }
+        $result = self::field($field)
+            ->where(['id'=>$id])
+            ->find();
+        return $result;
+    }
 
     /**
      * 根据用户id查询对应的下级人数
