@@ -1,0 +1,50 @@
+{extend name="base" /}
+{block name="body"}
+<div class="layui-fluid">
+    <div class="layui-row layui-col-space15">
+        <div class="layui-col-md12">
+            <div class="layui-card">
+                <div class="layui-card-body ">
+                    <table class="layui-table layui-form">
+                        <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>openid</th>
+                            <th>微信名</th>
+                            <th>性别</th>
+                            <th>国家</th>
+                            <th>省份</th>
+                            <th>城市</th>
+                            <th>提款支付宝</th>
+                            <th>提款姓名</th>
+                            <th>冻结的钱</th>
+                            <th>可提现</th>
+                            <th>上级ID</th>
+                            <th>级别</th>
+                        </thead>
+                        <tbody>
+                        {foreach $list as $k=>$v}
+                        <tr>
+                            <td>{$v['id']}</td>
+                            <td>{$v['openid']}</td>
+                            <td>{$v['nickname']}</td>
+                            <td>{$v['sex']}</td>
+                            <td>{$v['country']}</td>
+                            <td>{$v['province']}</td>
+                            <td>{$v['city']}</td>
+                            <td>{$v['tk_zfb']}</td>
+                            <td>{$v['tk_name']}</td>
+                            <td>{$v['dongjie_money']}</td>
+                            <td>{$v['yunxu_money']}</td>
+                            <td>{$v['sj_id']}</td>
+                            <td>{$v['user_level']}</td>
+                        </tr>
+                        {/foreach}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{/block}

@@ -29,7 +29,7 @@ class GuanzhuUserInfo extends Model
     public static function updateUserIsQXGZ($openId)
     {
         $result = self::where(['openid'=>$openId])
-            ->update(['is_qxgz'=>time()]);
+            ->update(['is_qxgz'=>time(),'subscribe'=>0]);
         return $result;
     }
 
