@@ -1,0 +1,42 @@
+{extend name="base" /}
+{block name="body"}
+<div class="layui-fluid">
+    <div class="layui-row layui-col-space15">
+        <div class="layui-col-md12">
+            <div class="layui-card">
+                <div class="layui-card-body ">
+                    <table class="layui-table layui-form">
+                        <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>openid</th>
+                            <th>提款金额</th>
+                            <th>提款发起的时间</th>
+                            <th>是否同意</th>
+                            <th>同意的时间</th>
+                            <th>操作</th>
+                        </thead>
+                        <tbody>
+                        {foreach $list as $k=>$v}
+                        <tr>
+                            <td>{$v['id']}</td>
+                            <td>{$v['openid']}</td>
+                            <td>{$v['money']}</td>
+                            <td>{$v['create_time']}</td>
+                            <td>{$v['is_agree']}</td>
+                            <td>{$v['agree_time']}</td>
+                            <td class="td-manage">
+                                <a   title="已转账"  onclick="return confirm('您确定您已近转账了吗？'); xadmin.open('已转账','{:url(\'tixian/agree\',[\'id\'=>$v.id])}')" href="javascript:;">
+                                    <i class="layui-icon">&#xe642;</i>
+                                </a>
+                            </td>
+                        </tr>
+                        {/foreach}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{/block}

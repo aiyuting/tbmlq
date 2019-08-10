@@ -1,0 +1,41 @@
+{extend name="base" /}
+{block name="body"}
+<div class="layui-fluid">
+    <div class="layui-row">
+        <div class="layui-form">
+            <form action="" method="post">
+                <div class="layui-form-item">
+                    <label for="yjbl" class="layui-form-label">
+                        <span class="x-red">*</span>等级名称</label>
+                    <div class="layui-input-inline">
+                        <input type="text"  name="name"  value="{$list.name|default=''}" required="" lay-verify="required" autocomplete="off" class="layui-input"></div>
+                </div>
+                <div class="layui-form-item">
+                    <label for="gzhappid" class="layui-form-label">
+                        <span class="x-red">*</span>条件(有效下级)</label>
+                    <div class="layui-input-inline">
+                        <input type="text"  name="where_num" value="{$list.where_num|default=''}" required="" lay-verify="required" autocomplete="off" class="layui-input"></div>
+                </div>
+                <div class="layui-form-item">
+                    <label for="gzhsecret" class="layui-form-label">
+                        <span class="x-red">*</span>一级返利(%)</label>
+                    <div class="layui-input-inline">
+                        <input type="text"  name="one_bili" value="{$list.one_bili|default=''}" required="" lay-verify="required" autocomplete="off" class="layui-input"></div>
+                </div>
+                <div class="layui-form-item">
+                    <label for="tblmpid" class="layui-form-label">
+                        <span class="x-red">*</span>二级返利(%)</label>
+                    <div class="layui-input-inline">
+                        <input type="text"  name="two_bili" value="{$list.two_bili|default=''}" required="" lay-verify="required" autocomplete="off" class="layui-input"></div>
+                </div>
+                <div class="layui-form-item">
+                    <div class="layui-input-inline">
+                        <button class="layui-btn" lay-filter="add" lay-submit="">提交</button></div>
+                </div>
+            </form>
+
+        </div>
+    </div>
+</div>
+{/block}
+
