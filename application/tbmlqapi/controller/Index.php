@@ -4,6 +4,7 @@ namespace app\tbmlqapi\controller;
 use app\common\model\tbmlqapi\GuanzhuUserInfo;
 use app\common\model\tbmlqapi\SysConfig;
 use app\common\model\tbmlqapi\SzmxLog;
+use app\common\model\tbmlqapi\TaobaokeOrderList;
 use app\common\model\tbmlqapi\TixianList;
 use app\common\model\tbmlqapi\UserLevel;
 use app\common\model\tbmlqapi\UserSearchInfo;
@@ -128,6 +129,10 @@ class Index extends Controller
                 $szmxList = SzmxLog::getListForUserId(10);
                 $content = $szmxList;
                 break;
+            case 'wddd':
+                $orderList = TaobaokeOrderList::getUserOrder(10);
+                $content = $orderList;
+                break;
             case 'viplevel':
                 $userLevelName = GuanzhuUserInfo::getUserLevel(session('userinfo')['id']);
                 $youxiaoXiajiUserCount = GuanzhuUserInfo::getYouXiaoXiaJiCount(session('userinfo')['id']);
@@ -174,6 +179,18 @@ class Index extends Controller
                 break;
             case '帮助':
                 $content = Config::get('message.help');
+                break;
+            case '余额':
+                $this->clickMenu('wdzh');
+                break;
+            case '资料':
+                $this->clickMenu('wdzh');
+                break;
+            case '明细':
+                $this->clickMenu('szmx');
+                break;
+            case '徒弟':
+                $this->clickMenu('wdtg');
                 break;
             case strpos($text,'支付宝'):
                 $newText=str_replace('支付宝','',$text);

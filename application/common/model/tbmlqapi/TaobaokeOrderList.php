@@ -139,4 +139,27 @@ class TaobaokeOrderList extends Model
         }
         /***************结束***************/
     }
+
+
+    /***
+     * 获取用户的订单.
+     * @param $orderNum 用户绑定的订单号后六位
+     * @param $showLength 需要展示的数量
+     */
+    public static function getUserOrder($orderNum,$showLength)
+    {
+        $result = self::where('','exp',"substring(trade_id,-6) = ({$orderNum})")
+            ->field('name')
+            ->order('id','desc')
+            ->limit(0,$showLength)
+            ->select();
+        if(empty($result)){
+            return '很抱歉,您还没有成功订单.';
+        }
+        $content = "显示最近{$showLength}条："."\r\n";
+        foreach ($result as $k => $v) {
+            $content.=$v['item_title'].'>>>>>>'.$v['tk_status']."\r\n";
+        }
+        return $content;
+    }
 }

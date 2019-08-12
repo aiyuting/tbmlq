@@ -13,7 +13,7 @@ class SzmxLog extends Model
     {
         $userId = session('userinfo')['id'];
         $result = self::where(['user_id'=>$userId])
-            ->order('id Desc')
+            ->order('id','desc')
             ->limit('0',$showLength)
             ->select();
         if(empty($result)){
