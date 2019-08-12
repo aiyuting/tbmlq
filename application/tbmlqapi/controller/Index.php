@@ -266,9 +266,12 @@ class Index extends Controller
     {
         /***此处判断是否为上级推荐来*****/
         if(!empty($this->postObj->EventKey)){
-            $openid = explode('_',$this->postObj->EventKey)[1];
-            //上级用户的id
-            $sjUserId = GuanzhuUserInfo::getInfoForOpenId($openid,'id')['id'];
+            $openid = explode('_',$this->postObj->EventKey)[1] ?? '';
+            if(!empty($openid)){
+                //上级用户的id
+                $sjUserId = GuanzhuUserInfo::getInfoForOpenId($openid,'id')['id'];
+            }
+
         }
         /****************结束**************/
 
