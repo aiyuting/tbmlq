@@ -3,6 +3,7 @@ namespace app\tbmlqapi\controller;
 
 use app\common\model\tbmlqapi\GuanzhuUserInfo;
 use app\common\model\tbmlqapi\SysConfig;
+use app\common\model\tbmlqapi\SzmxLog;
 use app\common\model\tbmlqapi\TixianList;
 use app\common\model\tbmlqapi\UserLevel;
 use app\common\model\tbmlqapi\UserSearchInfo;
@@ -64,6 +65,9 @@ class Index extends Controller
         $this->postObj = $postObj;
         //将当前用户的所有数据存储到session里面
         $nowUserInfo = GuanzhuUserInfo::getInfoForOpenId();
+        if(empty($nowUserInfo)){
+            ReposeText::reposeText('抱歉,您的账号暂时没有入库.请联系管理员进行操作。');
+        }
         session('userinfo',$nowUserInfo);
 
 
@@ -119,6 +123,10 @@ class Index extends Controller
                 break;
             case 'sqtx':
                 $content = Config::get('message.txhelp');
+                break;
+            case 'szmx':
+                $szmxList = SzmxLog::getListForUserId();
+                $content = $szmxList;
                 break;
             case 'wdtg':
                 //查出当前人的id

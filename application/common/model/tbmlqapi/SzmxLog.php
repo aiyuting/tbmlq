@@ -5,5 +5,24 @@ use think\Model;
 
 class SzmxLog extends Model
 {
-
+    /**
+     * 根据userid来获取对应的收支明细.
+     * @param $showLength 要显示的数量.
+     */
+    public static function getListForUserId($showLength)
+    {
+        $userId = session('userinfo')['id'];
+        $result = self::where(['user_id'=>$userId])
+            ->order('id Desc')
+            ->limit('0',$showLength)
+            ->select();
+        $content = '';
+        foreach ($result as $k => $v) {
+            $content.="显示最近{$showLength}条：".'\r\n'.$v['note'].',金额：'.$v['money'].'元'.'\r\n';
+        }
+        if(empty($content)){
+            $content = '很抱歉,您还没有收入.';
+        }
+        return $content;
+    }
 }

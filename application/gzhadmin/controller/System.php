@@ -42,7 +42,7 @@ class System extends Base
     }
     public function levelEdit(Request $request)
     {
-        $id = $request->get('id');
+        $id = $request->param('id');
         $level = UserLevel::find($id);
         if($request->isPost()) {
             $level->name = $request->post('name') ?? '';
