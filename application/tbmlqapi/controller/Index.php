@@ -128,7 +128,7 @@ class Index extends Controller
                 $szmxList = SzmxLog::getListForUserId(10);
                 $content = $szmxList;
                 break;
-            case 'vipLevel':
+            case 'viplevel':
                 $userLevelName = GuanzhuUserInfo::getUserLevel(session('userinfo')['id']);
                 $youxiaoXiajiUserCount = GuanzhuUserInfo::getYouXiaoXiaJiCount(session('userinfo')['id']);
                 $content = "您的用户等级为:{$userLevelName},您发展的有效下级有{$youxiaoXiajiUserCount}个.";
