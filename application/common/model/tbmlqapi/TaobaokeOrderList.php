@@ -175,7 +175,8 @@ class TaobaokeOrderList extends Model
         }
         $content = "显示最近{$showLength}条："."\r\n";
         foreach ($result as $k => $v) {
-            $content.="{$k}:".$v['item_title'].'>>>>>>'.self::getTkStatusName($v['tk_status'])."\r\n";
+            $num = $k+1;
+            $content.="{$num}:".$v['item_title'].'>>>>>>'.self::getTkStatusName($v['tk_status'])."\r\n";
         }
         return $content;
     }
