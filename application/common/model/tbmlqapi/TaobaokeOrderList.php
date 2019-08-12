@@ -152,7 +152,7 @@ class TaobaokeOrderList extends Model
             return '很抱歉,您还没有成功订单.';
         }
         $result = self::where('','exp',"substring(trade_id,-6) = ({$orderNum})")
-            ->field('name')
+            ->field('item_title,tk_status')
             ->order('id','desc')
             ->limit(0,$showLength)
             ->select();
