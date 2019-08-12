@@ -16,13 +16,14 @@ class SzmxLog extends Model
             ->order('id Desc')
             ->limit('0',$showLength)
             ->select();
-        $content = '';
+        if(empty($result)){
+            return '很抱歉,您还没有收入.';
+        }
+        $content = "显示最近{$showLength}条："."\r\n";
         foreach ($result as $k => $v) {
-            $content.="显示最近{$showLength}条：".'\r\n'.$v['note'].',金额：'.$v['money'].'元'.'\r\n';
+            $content.=$v['note'].',金额：'.$v['money'].'元'."\r\n";
         }
-        if(empty($content)){
-            $content = '很抱歉,您还没有收入.';
-        }
+
         return $content;
     }
 }
