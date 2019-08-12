@@ -14,7 +14,12 @@ class GetWxToken extends Controller
             $appId = GetSysConfig::sysConfig()['wx_appid'];
             $appSecret = GetSysConfig::sysConfig()['wx_appsecret'];
             $url = "https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid=".$appId."&secret=".$appSecret;
-            $data = json_decode(Curl::send($url,'','get'))->access_token;
+            $shuju = json_decode(Curl::send($url,'','get'));
+            if(!empty($shuju->errcode)){
+                ReposeText::reposeText($shuju);
+            }
+            $data = $shuju->access_token;
+
             session('access_token',$data);
         }
 

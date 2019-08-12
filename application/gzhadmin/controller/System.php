@@ -21,7 +21,7 @@ class System extends Base
             }
             $sysconfig->yj_bl = $request->post('yjbl') ?? '';
             $sysconfig->wx_appid = $request->post('gzhappid') ?? '';
-            $sysconfig->wx_appsecret = $request->post('gzhappid') ?? '';
+            $sysconfig->wx_appsecret = $request->post('gzhsecret') ?? '';
             $sysconfig->user_tblm_pid = $request->post('tblmpid') ?? '';
             $sysconfig->ztk_appkey = $request->post('ztkappkey') ?? '';
             $sysconfig->ztk_sid = $request->post('ztksid') ?? '';
