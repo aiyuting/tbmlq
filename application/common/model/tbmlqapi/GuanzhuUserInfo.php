@@ -158,4 +158,16 @@ class GuanzhuUserInfo extends Model
             ->find();
         return $result;
     }
+
+    /**
+     * 获取用户等级。
+     */
+    public static function getUserLevel($userid)
+    {
+        $user_level = self::where(['id'=>$userid])
+            ->value('user_level');
+        $user_level_name = UserLevel::where(['id'=>$user_level])
+            ->value('name');
+        return $user_level_name;
+    }
 }
