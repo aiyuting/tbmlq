@@ -52,6 +52,20 @@ tk_commission_rate_for_media_platform	String	0.01	专项服务费率：内容场
  */
 class TaobaokeOrderList extends Model
 {
+
+    /**
+     * 根据数组获取状态的中文
+     */
+    private static function getTkStatusName($tk_status)
+    {
+        $tkStName = [3=>'订单结算',12=>'订单付款',13=>'订单失效',14=>'订单成功'];
+        return $tkStName[$tk_status];
+    }
+
+
+
+
+
     /**
      * 付款订单的处理
      * @param $pid 推广位id
@@ -161,7 +175,7 @@ class TaobaokeOrderList extends Model
         }
         $content = "显示最近{$showLength}条："."\r\n";
         foreach ($result as $k => $v) {
-            $content.=$v['item_title'].'>>>>>>'.$v['tk_status']."\r\n";
+            $content.="{$k}:".$v['item_title'].'>>>>>>'.self::getTkStatusName($v['tk_status'])."\r\n";
         }
         return $content;
     }
