@@ -143,11 +143,14 @@ class TaobaokeOrderList extends Model
 
     /***
      * 获取用户的订单.
-     * @param $orderNum 用户绑定的订单号后六位
      * @param $showLength 需要展示的数量
      */
-    public static function getUserOrder($orderNum,$showLength)
+    public static function getUserOrder($showLength)
     {
+        $orderNum = session('userinfo')['tb_order_num'];
+        if(empty($orderNum)){
+            return '很抱歉,您还没有成功订单.';
+        }
         $result = self::where('','exp',"substring(trade_id,-6) = ({$orderNum})")
             ->field('name')
             ->order('id','desc')
