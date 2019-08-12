@@ -263,6 +263,7 @@ class Index extends Controller
                     $template .="</Articles>
 			     </xml> ";
                     echo sprintf($template, $toUser, $fromUser, time(), 'news');
+                    die;
                 }else{
                     $content = Config::get('message.otherMessage');
                 }
