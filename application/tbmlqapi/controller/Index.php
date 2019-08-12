@@ -125,7 +125,7 @@ class Index extends Controller
                 $content = Config::get('message.txhelp');
                 break;
             case 'szmx':
-                $szmxList = SzmxLog::getListForUserId();
+                $szmxList = SzmxLog::getListForUserId(10);
                 $content = $szmxList;
                 break;
             case 'wdtg':
