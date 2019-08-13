@@ -8,7 +8,8 @@ class Tixian extends Base
 {
     public function index()
     {
-        $tixianList = TixianList::select();
+        $tixianList = TixianList::order('id','desc')
+            ->select();
         $this->assign('list',$tixianList);
         return $this->fetch();
     }

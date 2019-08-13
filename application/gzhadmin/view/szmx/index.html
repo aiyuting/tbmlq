@@ -1,0 +1,36 @@
+{extend name="base" /}
+{block name="body"}
+<div class="layui-fluid">
+    <div class="layui-row layui-col-space15">
+        <div class="layui-col-md12">
+            <div class="layui-card">
+                <div class="layui-card-body ">
+                    <table class="layui-table layui-form">
+                        <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>备注</th>
+                            <th>金钱</th>
+                            <th>用户id</th>
+                            <th>类型</th>
+                            <th>时间</th>
+                        </thead>
+                        <tbody>
+                        {foreach $list as $k=>$v}
+                        <tr>
+                            <td>{$v['id']}</td>
+                            <td>{$v['note']}</td>
+                            <td>{$v['money']}</td>
+                            <td>{$v['user_id']}</td>
+                            <td>{$v['type']}</td>
+                            <td>{$v['create_time']}</td>
+                        </tr>
+                        {/foreach}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{/block}
