@@ -29,11 +29,12 @@ class OrderJiesuan extends Command
         //此处可以后期优化成redis  用队列在处理一遍.以防后期数据量大了 数据存储不完整。
         if(!empty($orderList)){
             foreach ($orderList as $k => $v){
-                //如果订单付款了.
-                TaobaokeOrderList::jiesuanchuli($v['trade_id'],$v['pub_share_pre_fee']);
+
                 //如果订单号一样 那么就修改
                 $trade_id_re = TaobaokeOrderList::field('id')->where(['trade_id'=>$v['trade_id']])->find();
                 if(!$trade_id_re){
+                    //如果订单付款了.
+                    TaobaokeOrderList::jiesuanchuli($v['trade_id'],$v['pub_share_pre_fee']);
                     $taobaokeOrerList = new TaobaokeOrderList();
                     $taobaokeOrerList->adzone_id = $v['adzone_id'] ?? '';
                     $taobaokeOrerList->adzone_name = $v['adzone_name'] ?? '';

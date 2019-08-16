@@ -45,4 +45,54 @@ class Wx extends Controller
         $result = json_decode(Curl::send($getParQrcodeUrl,$data,'post'),true);
         return $result;
     }
+
+    /**
+     * 获取模板列表
+     */
+
+    public static function getAllPrivateTemplate()
+    {
+        $access_token = GetWxToken::getWxToken();
+        $url = "https://api.weixin.qq.com/cgi-bin/template/get_all_private_template?access_token={$access_token}";
+        $result = json_decode(Curl::send($url,'','get'),true);
+        return $result;
+    }
+
+    /**
+     * 发送模板消息
+     */
+    public static function seedTemMessage($openId,$temId)
+    {
+        $access_token = GetWxToken::getWxToken();
+        $url = "https://api.weixin.qq.com/cgi-bin/message/template/send?access_token={$access_token}";
+        $data = "{
+           \"touser\":\"{$openId}\",
+           \"template_id\":\"{$temId}\",
+           \"data\":{
+                   \"name\": {
+                       \"value\":\"恭喜你购买成功！\",
+                   },
+                   \"itemname\":{
+                       \"value\":\"巧克力\",
+                   },
+                   \"ordernum\": {
+                       \"value\":\"39.8元\",
+                   },
+                   \"ordername\": {
+                       \"value\":\"2014年9月22日\",
+                   },
+                   \"jldz\":{
+                       \"value\":\"欢迎再次购买！\",
+                   }
+                   \"tkstatus\":{
+                       \"value\":\"欢迎再次购买！\",
+                   }
+                   \"xdsj\":{
+                       \"value\":\"欢迎再次购买！\",
+                   }
+           }
+       }";
+        $result = json_decode(Curl::send($url,$data,'post'),true);
+        return $result;
+    }
 }

@@ -3,6 +3,8 @@ namespace app\common\model\tbmlqapi;
 
 use app\tbmlqapi\tool\UserMoney;
 use app\tbmlqapi\tool\YonjingJisuan;
+use app\tbmlqapi\withouapi\Wx;
+use think\facade\Log;
 use think\Model;
 
 /**
@@ -72,8 +74,9 @@ class TaobaokeOrderList extends Model
      * @param $orderNum 订单号
      * @param $itemId 商品id
      * @param $suoyouyongjin 自己能拿到的所有佣金.
+     * @param $allItemData 所有商品数据
      */
-    public static function fukuanchuli($pid,$orderNum,$itemId,$suoyouyongjin)
+    public static function fukuanchuli($pid,$orderNum,$itemId,$suoyouyongjin,$allItemData)
     {
         //取订单号的后六位
         $orderNumHou6wei = substr($orderNum,-6);
@@ -93,7 +96,7 @@ class TaobaokeOrderList extends Model
 
 
         //此处用来判断用户存储的订单后六位是否和当前商品一致. 如果一致的话:就不用判断pid是否相等了..
-        $user = GuanzhuUserInfo::field('id,tb_order_num,dongjie_money')
+        $user = GuanzhuUserInfo::field('id,tb_order_num,dongjie_money,nickname')
             ->where(['openid'=>$openid['openid']])
             ->find();
         $yongjing = YonjingJisuan::yongjingjisuan('','',$suoyouyongjin); //计算佣金;
@@ -106,14 +109,36 @@ class TaobaokeOrderList extends Model
             $saveUserInfoResult = $user->save();
             if($saveUserInfoResult){
                 //删除用户的搜索记录。
-                if($openid->delete()){
-                    return true;
-                }
+                $openid->delete();
             }
         }
 
-
-
+        //此处后期要二次修改
+        $data = "\"data\":{
+                   \"name\": {
+                       \"value\":\"{$user['nickname']}\",
+                   },
+                   \"itemname\":{
+                       \"value\":\"{$allItemData['item_title']}\",
+                   },
+                   \"ordernum\": {
+                       \"value\":\"{$allItemData['trade_id']}\",
+                   },
+                   \"ordername\": {
+                       \"value\":\"{$allItemData['pay_price']}\",
+                   },
+                   \"jldz\":{
+                       \"value\":\"{$yongjing}\",
+                   }
+                   \"tkstatus\":{
+                       \"value\":\"{$allItemData['tk_status']}\",
+                   }
+                   \"xdsj\":{
+                       \"value\":\"{$allItemData['create_time']}\",
+                   }
+           }";
+        $ceshi = Wx::seedTemMessage($openid['openid'],'6dp0QlBuchqmkbDbxJsXY0Txc6ZWaZUSobDL7U_7M6g');
+        Log::write('新订单通知模板'.$ceshi);
 
 
     }
