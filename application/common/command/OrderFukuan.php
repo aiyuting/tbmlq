@@ -32,7 +32,7 @@ class OrderFukuan extends Command
 
                 //如果订单号一样 那么就修改
                 $trade_id_re = TaobaokeOrderList::field('id')->where(['trade_id'=>$v['trade_id']])->find();
-                if(!$trade_id_re){
+                if(empty($trade_id_re)){
                     //如果订单付款了.
                     TaobaokeOrderList::fukuanchuli($v['adzone_id'],$v['trade_id'],$v['num_iid'],$v['pub_share_pre_fee'],$v);
                     $taobaokeOrerList = new TaobaokeOrderList();
