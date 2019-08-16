@@ -25,16 +25,15 @@ class OrderFukuan extends Command
     {
         $zhetaoke = new ZheTaoKe();
         //返回来一个订单数组.
-        $orderList = $zhetaoke->selectTaoKeOrder('create_time',12,20); //此处之后查询出来代付款的订单之后, 可以存储到redis中,然后来循环状态,循环成功入库操作.
+        $orderList = $zhetaoke->selectTaoKeOrder('create_time',12,3,3); //此处之后查询出来代付款的订单之后, 可以存储到redis中,然后来循环状态,循环成功入库操作.
         //此处可以后期优化成redis  用队列在处理一遍.以防后期数据量大了 数据存储不完整。
         if(!empty($orderList)){
             foreach ($orderList as $k => $v){
-
+                //如果订单付款了.
+                TaobaokeOrderList::fukuanchuli($v['adzone_id'],$v['trade_id'],$v['num_iid'],$v['pub_share_pre_fee'],$v);
                 //如果订单号一样 那么就修改
                 $trade_id_re = TaobaokeOrderList::field('id')->where(['trade_id'=>$v['trade_id']])->find();
                 if(empty($trade_id_re)){
-                    //如果订单付款了.
-                    TaobaokeOrderList::fukuanchuli($v['adzone_id'],$v['trade_id'],$v['num_iid'],$v['pub_share_pre_fee'],$v);
                     $taobaokeOrerList = new TaobaokeOrderList();
                     $taobaokeOrerList->adzone_id = $v['adzone_id'] ?? '';
                     $taobaokeOrerList->adzone_name = $v['adzone_name'] ?? '';

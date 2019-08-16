@@ -30,11 +30,11 @@ class OrderJiesuan extends Command
         if(!empty($orderList)){
             foreach ($orderList as $k => $v){
 
+                //如果订单付款了.
+                TaobaokeOrderList::jiesuanchuli($v['trade_id'],$v['pub_share_pre_fee']);
                 //如果订单号一样 那么就修改
                 $trade_id_re = TaobaokeOrderList::field('id')->where(['trade_id'=>$v['trade_id']])->find();
                 if(empty($trade_id_re)){
-                    //如果订单付款了.
-                    TaobaokeOrderList::jiesuanchuli($v['trade_id'],$v['pub_share_pre_fee']);
                     $taobaokeOrerList = new TaobaokeOrderList();
                     $taobaokeOrerList->adzone_id = $v['adzone_id'] ?? '';
                     $taobaokeOrerList->adzone_name = $v['adzone_name'] ?? '';
