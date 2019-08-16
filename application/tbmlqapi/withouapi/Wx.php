@@ -61,37 +61,16 @@ class Wx extends Controller
     /**
      * 发送模板消息
      */
-    public static function seedTemMessage($openId,$temId)
+    public static function seedTemMessage($openId,$temId,$temData)
     {
         $access_token = GetWxToken::getWxToken();
         $url = "https://api.weixin.qq.com/cgi-bin/message/template/send?access_token={$access_token}";
-        $data = "{
-           \"touser\":\"{$openId}\",
-           \"template_id\":\"{$temId}\",
-           \"data\":{
-                   \"name\": {
-                       \"value\":\"恭喜你购买成功！\",
-                   },
-                   \"itemname\":{
-                       \"value\":\"巧克力\",
-                   },
-                   \"ordernum\": {
-                       \"value\":\"39.8元\",
-                   },
-                   \"ordername\": {
-                       \"value\":\"2014年9月22日\",
-                   },
-                   \"jldz\":{
-                       \"value\":\"欢迎再次购买！\",
-                   }
-                   \"tkstatus\":{
-                       \"value\":\"欢迎再次购买！\",
-                   }
-                   \"xdsj\":{
-                       \"value\":\"欢迎再次购买！\",
-                   }
-           }
-       }";
+        $data = [
+            'touser' => $openId,
+            'template_id' => $temId,
+            $temData
+        ];
+        $data = json_encode($data);
         $result = json_decode(Curl::send($url,$data,'post'),true);
         return $result;
     }

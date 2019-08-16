@@ -114,30 +114,32 @@ class TaobaokeOrderList extends Model
         }
 
         //此处后期要二次修改
-        $data = "\"data\":{
-                   \"name\": {
-                       \"value\":\"{$user['nickname']}\",
-                   },
-                   \"itemname\":{
-                       \"value\":\"{$allItemData['item_title']}\",
-                   },
-                   \"ordernum\": {
-                       \"value\":\"{$allItemData['trade_id']}\",
-                   },
-                   \"ordername\": {
-                       \"value\":\"{$allItemData['pay_price']}\",
-                   },
-                   \"jldz\":{
-                       \"value\":\"{$yongjing}\",
-                   }
-                   \"tkstatus\":{
-                       \"value\":\"{$allItemData['tk_status']}\",
-                   }
-                   \"xdsj\":{
-                       \"value\":\"{$allItemData['create_time']}\",
-                   }
-           }";
-        $ceshi = Wx::seedTemMessage($openid['openid'],'6dp0QlBuchqmkbDbxJsXY0Txc6ZWaZUSobDL7U_7M6g');
+        $data = [
+            'data' => [
+                'name' => [
+                    'value' => $user['nickname']
+                ],
+                'itemname' => [
+                    'value' => $allItemData['item_title']
+                ],
+                'ordernum' => [
+                    'value' => $allItemData['trade_id']
+                ],
+                'ordername' => [
+                    'value' => $allItemData['pay_price']
+                ],
+                'jldz' => [
+                    'value' => $yongjing
+                ],
+                'tkstatus' => [
+                    'value' => $allItemData['tk_status']
+                ],
+                'xdsj' => [
+                    'value' => $allItemData['create_time']
+                ]
+            ]
+        ];
+        $ceshi = Wx::seedTemMessage($openid['openid'],'6dp0QlBuchqmkbDbxJsXY0Txc6ZWaZUSobDL7U_7M6g',$data);
         Log::write('新订单通知模板'.$ceshi);
 
 
