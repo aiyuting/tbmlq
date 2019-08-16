@@ -25,7 +25,7 @@ class OrderFukuan extends Command
     {
         $zhetaoke = new ZheTaoKe();
         //返回来一个订单数组.
-        $orderList = $zhetaoke->selectTaoKeOrder('create_time',12,20);
+        $orderList = $zhetaoke->selectTaoKeOrder('create_time',12,20); //此处之后查询出来代付款的订单之后, 可以存储到redis中,然后来循环状态,循环成功入库操作.
         //此处可以后期优化成redis  用队列在处理一遍.以防后期数据量大了 数据存储不完整。
         if(!empty($orderList)){
             foreach ($orderList as $k => $v){

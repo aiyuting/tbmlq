@@ -132,6 +132,10 @@ class TaobaokeOrderList extends Model
         //查询淘宝号对应的用户
         $userId = GuanzhuUserInfo::where(['tb_order_num'=>$orderNumHou6wei])
             ->value('id');
+        //如果没有对应的账户 那么就不进行以下的操作
+        if(empty($userId)){
+            return false;
+        }
         UserMoney::userMoney($userId,$yongjing,'订单结算',1,true);
 
 
