@@ -68,7 +68,7 @@ class Wx extends Controller
         $data = [
             'touser' => $openId,
             'template_id' => $temId,
-            $temData
+            'data' => $temData
         ];
         $data = json_encode($data);
         $result = json_decode(Curl::send($url,$data,'post'),true);
