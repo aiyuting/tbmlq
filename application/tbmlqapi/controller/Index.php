@@ -66,9 +66,7 @@ class Index extends Controller
         $this->postObj = $postObj;
         //将当前用户的所有数据存储到session里面
         $nowUserInfo = GuanzhuUserInfo::getInfoForOpenId();
-        if(empty($nowUserInfo)){
-            ReposeText::reposeText('抱歉,您的账号暂时没有入库.请联系管理员进行操作。');
-        }
+
         session('userinfo',$nowUserInfo);
 
 
@@ -90,16 +88,25 @@ class Index extends Controller
                 //取消关注公众号事件
                 if( strtolower( $postObj->Event ) == 'unsubscribe' )
                 {
+                    if(empty($nowUserInfo)){
+                        ReposeText::reposeText('抱歉,您的账号暂时没有入库.请联系管理员进行操作。');
+                    }
                     $this->quxiaoguanzhuGzh();
                 }
                 //单机菜单事件
                 if( strtolower( $postObj->Event ) == 'click' )
                 {
+                    if(empty($nowUserInfo)){
+                        ReposeText::reposeText('抱歉,您的账号暂时没有入库.请联系管理员进行操作。');
+                    }
                     $this->clickMenu(strtolower( $postObj->EventKey ));
                 }
                 break;
             //回复文本消息
             case $msgType == 'text';
+                if(empty($nowUserInfo)){
+                    ReposeText::reposeText('抱歉,您的账号暂时没有入库.请联系管理员进行操作。');
+                }
                 $this->outMessage(trim( $postObj->Content ));
                 break;
         }
