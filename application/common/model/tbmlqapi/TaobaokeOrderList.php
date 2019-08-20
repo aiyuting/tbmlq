@@ -78,6 +78,10 @@ class TaobaokeOrderList extends Model
      */
     public static function fukuanchuli($pid,$orderNum,$itemId,$suoyouyongjin,$allItemData)
     {
+        //如果订单付款已经处理 那么就不需要管了。
+        if(TaobaokeOrderList::where(['trade_id'=>$orderNum])->value('fk_cl') == 1){
+            return false;
+        }
         //取订单号的后六位
         $orderNumHou6wei = substr($orderNum,-6);
         $openid = UserSearchInfo::field('openid')
@@ -150,6 +154,12 @@ class TaobaokeOrderList extends Model
 
     public static function jiesuanchuli($orderNum,$suoyouyongjin)
     {
+        //如果订单结算已经处理 那么就不需要管了。
+        if(TaobaokeOrderList::where(['trade_id'=>$orderNum])->value('js_cl') == 1){
+            return false;
+        }
+
+
         $yongjing = YonjingJisuan::yongjingjisuan('','',$suoyouyongjin); //计算佣金;
         //取订单号的后六位
         $orderNumHou6wei = substr($orderNum,-6);

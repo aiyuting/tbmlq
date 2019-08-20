@@ -65,6 +65,7 @@ class OrderJiesuan extends Command
                     $taobaokeOrerList->trade_id = $v['trade_id'] ?? '';
                     $taobaokeOrerList->trade_parent_id = $v['trade_parent_id'] ?? '';
                     $taobaokeOrerList->earning_time = $v['earning_time'] ?? '';
+                    $taobaokeOrerList->js_cl = 1;
                     $taobaokeOrerList->save();
                 }else{
                     $trade_id_re->adzone_id = $v['adzone_id'] ?? '';
@@ -96,6 +97,7 @@ class OrderJiesuan extends Command
                     $trade_id_re->trade_id = $v['trade_id'] ?? '';
                     $trade_id_re->trade_parent_id = $v['trade_parent_id'] ?? '';
                     $trade_id_re->earning_time = $v['earning_time'] ?? '';
+                    $trade_id_re->js_cl = 1;
                     $trade_id_re->save();
                 }
 
