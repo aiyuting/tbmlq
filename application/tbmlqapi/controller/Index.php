@@ -221,14 +221,18 @@ class Index extends Controller
                 $shopId = $zhetaoke->getShopId($text)['item_id'] ?? '';
 
 
-                //如果当前用户表有存储的该用户的订单号后六位,那么就不用在存储到搜索库里面了..
-                if(GuanzhuUserInfo::isTbOrderNum() === false){
-                    //将用户搜索的商品存储到库里面
-                    $givePidToItemId = $this->saveUserSearchInfo($shopId,$this->postObj->FromUserName);
-                }else{
-                    $givePidToItemId = '';
-                }
+
                 if(!empty($shopId)){
+
+
+                    //如果当前用户表有存储的该用户的订单号后六位,那么就不用在存储到搜索库里面了..
+                    if(GuanzhuUserInfo::isTbOrderNum() === false){
+                        //将用户搜索的商品存储到库里面
+                        $givePidToItemId = $this->saveUserSearchInfo($shopId,$this->postObj->FromUserName);
+                    }else{
+                        $givePidToItemId = '';
+                    }
+
 
                     //调取转链api
                     $gaoyongInfo = $zhetaoke->gaoyongApiShopId($shopId,$givePidToItemId);
