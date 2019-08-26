@@ -137,6 +137,8 @@ class ZheTaoKe extends Controller
         //开始时间
         $start_time = date("Y-m-d H:i:s", strtotime("-{$lunxunTimeMin} minute"));
         $end_time = date('Y-m-d H:i:s',strtotime("+{$lunxunTimeMin} minute",strtotime($start_time)));
+        $end_time = urlencode($end_time);
+        $start_time = urlencode($start_time);
         $page_size = 100;
         $visitUrl = $this->apiUrl."open_dingdanchaxun2.ashx?appkey={$this->appkey}&sid={$this->sid}&start_time={$start_time}&end_time={$end_time}&page_size={$page_size}&signurl=1&query_type={$order_query_type}&tk_status={$tk_status}";
         $result = json_decode(Curl::send($visitUrl,'','get'),true);

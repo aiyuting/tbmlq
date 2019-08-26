@@ -129,7 +129,7 @@ class TaobaokeOrderList extends Model
                 'value' => $allItemData['trade_id']
             ],
             'ordername' => [
-                'value' => $allItemData['price']
+                'value' => $allItemData['alipay_total_price']
             ],
             'jldz' => [
                 'value' => $yongjing
