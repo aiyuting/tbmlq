@@ -138,7 +138,7 @@ class TaobaokeOrderList extends Model
                 'value' => $allItemData['tk_status']
             ],
             'xdsj' => [
-                'value' => $allItemData['create_time']
+                'value' => $allItemData['tb_paid_time']
             ]
         ];
         $ceshi = Wx::seedTemMessage($openid['openid'],'6dp0QlBuchqmkbDbxJsXY0Txc6ZWaZUSobDL7U_7M6g',$data);
