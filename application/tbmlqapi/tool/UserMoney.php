@@ -17,18 +17,14 @@ class UserMoney extends Controller
      * @param $money 多少钱
      * @param $note 加钱的备注
      * @param $type 类型 1:加钱 2:减钱
-     * @param bool $isHasDongjie 是否需要减去冻结佣金.
      * @throws \think\db\exception\DataNotFoundException
      * @throws \think\db\exception\ModelNotFoundException
      * @throws \think\exception\DbException
      */
-    public static function userMoney($userid,$money,$note,$type,$isHasDongjie = false)
+    public static function userMoney($userid,$money,$note,$type)
     {
-        $userinfo = GuanzhuUserInfo::field('id,dongjie_money,yunxu_money')
+        $userinfo = GuanzhuUserInfo::field('id,yunxu_money')
             ->find($userid);
-        if($isHasDongjie){
-            $userinfo->dongjie_money = $userinfo['dongjie_money'] - $money;
-        }
         if($type == 1){
             $userinfo->yunxu_money = $userinfo['yunxu_money'] + $money;
         }else{

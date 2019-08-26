@@ -104,24 +104,43 @@ class ZheTaoKe extends Controller
 
     }
 
+//    /**
+//     * 订单查询API接口
+//     * @param $order_query_type 订单查询类型，创建时间“create_time”，或结算时间“settle_time”
+//     * @param $tk_status 订单状态
+//     * @param $needTime 需要查询的时间 /分钟（最多查询二十分钟）
+//     * @param $lunxunTimeMin 当前时间往后延长多少分钟. /分钟
+//     * @return string
+//     */
+//
+//    public function selectTaoKeOrder($order_query_type,$tk_status,$lunxunTimeMin,$needTime = 20)
+//    {
+//        //开始时间
+//        $start_time = urlencode(date("Y-m-d H:i:s", strtotime("-{$lunxunTimeMin} minute")));
+//        $span = $needTime * 60;
+//        $page_size = 100;
+//        $visitUrl = $this->apiUrl."open_dingdanchaxun.ashx?appkey={$this->appkey}&sid={$this->sid}&start_time={$start_time}&span={$span}&page_size={$page_size}&signurl=1&order_query_type={$order_query_type}&tk_status={$tk_status}";
+//        $result = json_decode(Curl::send($visitUrl,'','get'),true);
+//        $result = json_decode(Curl::send($result['url'],'','get'),true);
+//        return $result['tbk_sc_order_get_response']['results']['n_tbk_order'] ?? '';
+//    }
+
     /**
-     * 订单查询API接口
-     * @param $order_query_type 订单查询类型，创建时间“create_time”，或结算时间“settle_time”
-     * @param $tk_status 订单状态
-     * @param $needTime 需要查询的时间 /分钟（最多查询二十分钟）
-     * @param $lunxunTimeMin 当前时间往后延长多少分钟. /分钟
+     * 新订单查询API接口
+     * @param $order_query_type 查询时间类型，1：按照订单淘客创建时间查询，2:按照订单淘客付款时间查询，3:按照订单淘客结算时间查询
+     * @param $tk_status 淘客订单状态，12-付款，13-关闭，14-确认收货（暂时无法结算佣金），3-结算成功;不传，表示所有状态
+     * @param $lunxunTimeMin 几分钟轮训一次
      * @return string
      */
-
-    public function selectTaoKeOrder($order_query_type,$tk_status,$lunxunTimeMin,$needTime = 20)
+    public function selectTaoKeOrder($order_query_type,$tk_status,$lunxunTimeMin)
     {
         //开始时间
-        $start_time = urlencode(date("Y-m-d H:i:s", strtotime("-{$lunxunTimeMin} minute")));
-        $span = $needTime * 60;
+        $start_time = date("Y-m-d H:i:s", strtotime("-{$lunxunTimeMin} minute"));
+        $end_time = date('Y-m-d H:i:s',strtotime("+{$lunxunTimeMin} minute",strtotime($start_time)));
         $page_size = 100;
-        $visitUrl = $this->apiUrl."open_dingdanchaxun.ashx?appkey={$this->appkey}&sid={$this->sid}&start_time={$start_time}&span={$span}&page_size={$page_size}&signurl=1&order_query_type={$order_query_type}&tk_status={$tk_status}";
+        $visitUrl = $this->apiUrl."open_dingdanchaxun2.ashx?appkey={$this->appkey}&sid={$this->sid}&start_time={$start_time}&end_time={$end_time}&page_size={$page_size}&signurl=1&query_type={$order_query_type}&tk_status={$tk_status}";
         $result = json_decode(Curl::send($visitUrl,'','get'),true);
         $result = json_decode(Curl::send($result['url'],'','get'),true);
-        return $result['tbk_sc_order_get_response']['results']['n_tbk_order'] ?? '';
+        return $result['tbk_sc_order_details_get_response']['data']['results']['publisher_order_dto'] ?? '';
     }
 }

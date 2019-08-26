@@ -100,16 +100,16 @@ class TaobaokeOrderList extends Model
 
 
         //此处用来判断用户存储的订单后六位是否和当前商品一致. 如果一致的话:就不用判断pid是否相等了..
-        $user = GuanzhuUserInfo::field('id,tb_order_num,dongjie_money,nickname')
+        $user = GuanzhuUserInfo::field('id,tb_order_num,nickname')
             ->where(['openid'=>$openid['openid']])
             ->find();
         $yongjing = YonjingJisuan::yongjingjisuan('','',$suoyouyongjin); //计算佣金;
         if($user['tb_order_num'] == $orderNumHou6wei){
-            $user->dongjie_money = $yongjing + $user['dongjie_money'];
-            $user->save();
+//            $user->dongjie_money = $yongjing + $user['dongjie_money'];
+//            $user->save();
         }else{
             $user->tb_order_num = $orderNumHou6wei;
-            $user->dongjie_money = $yongjing + $user['dongjie_money'];
+//            $user->dongjie_money = $yongjing + $user['dongjie_money'];
             $saveUserInfoResult = $user->save();
             if($saveUserInfoResult){
                 //删除用户的搜索记录。
