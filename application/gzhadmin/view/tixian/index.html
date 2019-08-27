@@ -26,7 +26,7 @@
                             <td>{$v['is_agree']}</td>
                             <td>{$v['agree_time']}</td>
                             <td class="td-manage">
-                                <a   title="已转账"  onclick="return confirm('您确定您已近转账了吗？'); xadmin.open('已转账','{:url(\'tixian/agree\',[\'id\'=>$v.id])}')" href="javascript:;">
+                                <a   title="已转账"  onclick="return confirm('您确定您已近转账了吗？'); " href="{:url('tixian/agree',['id'=>$v.id])}">
                                     <i class="layui-icon">&#xe642;</i>
                                 </a>
                             </td>
