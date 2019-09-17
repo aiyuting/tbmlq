@@ -512,12 +512,12 @@ class Index extends Controller
         if(!is_numeric($value)){
             return Config::get('message.txbhf');
         }
-        if($value < 10){
-            return Config::get('message.txzdje').'10元';
-        }
-        if($value % 10 != 0){
-            return Config::get('message.txdbs');
-        }
+//        if($value < 10){
+//            return Config::get('message.txzdje').'10元';
+//        }
+//        if($value % 10 != 0){
+//            return Config::get('message.txdbs');
+//        }
         /********判断用户输入的金额结束**********/
         $nowUserInfo = GuanzhuUserInfo::getInfoForOpenId('','id,yunxu_money');
         //检查用户的余额是否大于用户输入的提现金额.
