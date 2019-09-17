@@ -14,12 +14,11 @@ class Tixian extends Base
         return $this->fetch();
     }
 
-    public function agree(Request $request)
+    public function agree($id,Request $request)
     {
-        $id = $request->get('id');
 
         $tixian = TixianList::find($id);
-        if($tixian['is_agree'] == 1){
+        if($tixian->getData('is_agree') == 1){
             return $this->error('您已经转过账了......');
         }
         $tixian->is_agree = 1;
